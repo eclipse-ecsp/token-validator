@@ -31,8 +31,7 @@ jobs:
   dependencies_update:
     needs: sonar_analysis
     uses: eclipse-ecsp/.github/.github/workflows/workflow-dependencies-update.yml@52c11f63f46f741e4f56c5dace97b44982a4372b
-    secrets:
-      ECSP_BOT_PAT: ${{ secrets.ECSP_BOT_PAT }}
+    secrets: inherit
     with:
       java_version: '25'
       java_distribution: 'temurin'
@@ -41,11 +40,7 @@ jobs:
       contents: read
   deploy-snapshot:
     uses: eclipse-ecsp/.github/.github/workflows/workflow-publish-artifacts.yml@52c11f63f46f741e4f56c5dace97b44982a4372b
-    secrets:
-      GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-      GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
-      CENTRAL_SONATYPE_TOKEN_USERNAME: ${{ secrets.CENTRAL_SONATYPE_TOKEN_USERNAME }}
-      CENTRAL_SONATYPE_TOKEN_PASSWORD: ${{ secrets.CENTRAL_SONATYPE_TOKEN_PASSWORD }}
+    secrets: inherit
     needs: sonar_analysis
     with:
       java_version: '25'
