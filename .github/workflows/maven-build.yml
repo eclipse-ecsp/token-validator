@@ -10,7 +10,7 @@ on:
 
 jobs:
   maven_build:
-    uses: eclipse-ecsp/.github/.github/workflows/workflow-maven-run.yml@main
+    uses: eclipse-ecsp/.github/.github/workflows/workflow-maven-run.yml@52c11f63f46f741e4f56c5dace97b44982a4372b
     name: Maven Build
     with:
       java_version: '25'
@@ -22,7 +22,7 @@ jobs:
       token: ${{ secrets.GITHUB_TOKEN }}
   sonar_analysis:
     needs: maven_build
-    uses: eclipse-ecsp/.github/.github/workflows/workflow-sonar-analysis.yml@main
+    uses: eclipse-ecsp/.github/.github/workflows/workflow-sonar-analysis.yml@52c11f63f46f741e4f56c5dace97b44982a4372b
     with:
       java_version: '25'
       java_distribution: 'temurin'
@@ -30,8 +30,9 @@ jobs:
       token: ${{ secrets.SONAR_TOKEN }}
   dependencies_update:
     needs: sonar_analysis
-    uses: eclipse-ecsp/.github/.github/workflows/workflow-dependencies-update.yml@main
-    secrets: inherit
+    uses: eclipse-ecsp/.github/.github/workflows/workflow-dependencies-update.yml@52c11f63f46f741e4f56c5dace97b44982a4372b
+    secrets:
+      ECSP_BOT_PAT: ${{ secrets.ECSP_BOT_PAT }}
     with:
       java_version: '25'
       java_distribution: 'temurin'
@@ -39,8 +40,12 @@ jobs:
       pull-requests: write
       contents: read
   deploy-snapshot:
-    uses: eclipse-ecsp/.github/.github/workflows/workflow-publish-artifacts.yml@main
-    secrets: inherit
+    uses: eclipse-ecsp/.github/.github/workflows/workflow-publish-artifacts.yml@52c11f63f46f741e4f56c5dace97b44982a4372b
+    secrets:
+      GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+      GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+      CENTRAL_SONATYPE_TOKEN_USERNAME: ${{ secrets.CENTRAL_SONATYPE_TOKEN_USERNAME }}
+      CENTRAL_SONATYPE_TOKEN_PASSWORD: ${{ secrets.CENTRAL_SONATYPE_TOKEN_PASSWORD }}
     needs: sonar_analysis
     with:
       java_version: '25'

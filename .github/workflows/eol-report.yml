@@ -8,7 +8,7 @@ on:
 
 jobs:
   eol_dependency_check:
-    uses: eclipse-ecsp/.github/.github/workflows/workflow-eol-analysis.yml@main
+    uses: eclipse-ecsp/.github/.github/workflows/workflow-eol-analysis.yml@52c11f63f46f741e4f56c5dace97b44982a4372b
     with:
       java_version: '25'
       java_distribution: 'temurin'
