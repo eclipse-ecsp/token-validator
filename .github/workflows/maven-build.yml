@@ -1,0 +1,46 @@
+
+name: Maven Build & Sonar Analysis
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  maven_build:
+    uses: eclipse-ecsp/.github/.github/workflows/workflow-maven-run.yml@main
+    name: Maven Build
+    with:
+      java_version: '25'
+      java_distribution: 'temurin'
+      maven_args: 'clean package --file pom.xml'
+      test-report: true
+      summaries-test-report: true
+    secrets:
+      token: ${{ secrets.GITHUB_TOKEN }}
+  sonar_analysis:
+    needs: maven_build
+    uses: eclipse-ecsp/.github/.github/workflows/workflow-sonar-analysis.yml@main
+    with:
+      java_version: '25'
+      java_distribution: 'temurin'
+    secrets:
+      token: ${{ secrets.SONAR_TOKEN }}
+  dependencies_update:
+    needs: sonar_analysis
+    uses: eclipse-ecsp/.github/.github/workflows/workflow-dependencies-update.yml@main
+    secrets: inherit
+    with:
+      java_version: '25'
+      java_distribution: 'temurin'
+    permissions:
+      pull-requests: write
+      contents: read
+  deploy-snapshot:
+    uses: eclipse-ecsp/.github/.github/workflows/workflow-publish-artifacts.yml@main
+    secrets: inherit
+    with:
+      java_version: '25'
+      java_distribution: 'temurin'

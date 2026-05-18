@@ -1,0 +1,64 @@
+name: Release
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  sonar_analysis:
+    uses: eclipse-ecsp/.github/.github/workflows/workflow-sonar-analysis.yml@main
+    secrets:
+      token: ${{ secrets.SONAR_TOKEN }}
+    with:
+      java_version: '25'
+      java_distribution: 'temurin'
+  licence_compliance_status:
+    needs: sonar_analysis
+    uses: eclipse-ecsp/.github/.github/workflows/workflow-licences-analysis.yml@main
+    name: Check Licence Compliance Status
+    with:
+      java_version: '25'
+      java_distribution: 'temurin'
+      create-review: false
+
+  extract_version:
+    runs-on: ubuntu-latest
+    needs: licence_compliance_status
+    name: Extract release version without v prefix
+    outputs:
+      release_version: ${{ steps.set_version.outputs.release_version }}
+    steps:
+      - id: set_version
+        run: |
+          if [[ "${{ github.event_name }}" == "release" ]]; then
+              if [[ "${{ github.event.release.tag_name }}" == v* ]]; then
+                  version=${{ github.event.release.tag_name }}
+                  echo "release_version=${version:1}" >> $GITHUB_ENV
+                  echo "::set-output name=release_version::${version:1}"
+              else
+                  echo "release_version=${{ github.event.release.tag_name }}" >> $GITHUB_ENV
+                  echo "::set-output name=release_version::${{ github.event.release.tag_name }}"
+              fi
+          else
+            version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout | sed 's/-SNAPSHOT//')
+            echo "release_version=$version" >> $GITHUB_ENV
+            echo "::set-output name=release_version::$version"
+          fi
+
+  publish_artifacts:
+    needs: extract_version
+    uses: eclipse-ecsp/.github/.github/workflows/workflow-publish-artifacts.yml@main
+    secrets: inherit
+    with:
+      java_version: '25'
+      java_distribution: 'temurin'
+      release_version: ${{ needs.extract_version.outputs.release_version }}
+
+  update_next_version:
+    needs: extract_version
+    uses: eclipse-ecsp/.github/.github/workflows/workflow-update-next-version.yml@main
+    with:
+      version: ${{ needs.extract_version.outputs.release_version }}
+      java_version: '25'
+      java_distribution: 'temurin'
+    secrets: inherit
