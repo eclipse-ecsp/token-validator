@@ -172,7 +172,7 @@ class PublicKeyRefreshSchedulerTest {
     // -------------------------------------------------------------------------
 
     @Test
-    void destroy_terminatesGracefully() throws Exception {
+    void destroy_terminatesGracefully() {
         PublicKeyManager manager = mock(PublicKeyManager.class);
         PublicKeySourceProvider provider = mock(PublicKeySourceProvider.class);
         when(provider.keySources()).thenReturn(List.of());
@@ -190,7 +190,7 @@ class PublicKeyRefreshSchedulerTest {
     void destroy_forcedShutdown_whenExecutorDoesNotTerminate() throws Exception {
         PublicKeyManager manager = mock(PublicKeyManager.class);
         PublicKeySourceProvider provider = mock(PublicKeySourceProvider.class);
-        // Give it a very long-running refresh so the executor won't terminate immediately;
+        /// Give it a very long-running refresh so the executor won't terminate immediately;
         // we override the scheduler with a subclass that uses a tiny timeout so the test is fast.
         when(provider.keySources())
             .thenReturn(List.of(source("iss1", Duration.ofMinutes(LONG_REFRESH_INTERVAL_MINUTES))));
@@ -204,8 +204,8 @@ class PublicKeyRefreshSchedulerTest {
         ScheduledExecutorService exec = getScheduler(scheduler);
         exec.submit(() -> {
             try {
-                Thread.sleep(Long.MAX_VALUE);
-            } catch (InterruptedException e) {
+                Thread.sleep(Long.MAX_VALUE); //NOSONAR - test helper task that simulates a long-running operation
+            } catch (InterruptedException _) {
                 Thread.currentThread().interrupt();
             }
         });

@@ -41,6 +41,7 @@ jobs:
   deploy-snapshot:
     uses: eclipse-ecsp/.github/.github/workflows/workflow-publish-artifacts.yml@main
     secrets: inherit
+    needs: sonar_analysis
     with:
       java_version: '25'
       java_distribution: 'temurin'

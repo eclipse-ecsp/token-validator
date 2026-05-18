@@ -98,7 +98,7 @@ class TokenValidatorAutoConfigurationTest {
                 "token.validator.sources[0].url=" + JWKS_URL)
             .withBean(
                 ValidationMetricsRecorder.class,
-                () -> new NoopValidationMetricsRecorder())
+                () -> NoopValidationMetricsRecorder::new)
             .run(ctx -> assertThat(ctx).hasSingleBean(TokenValidator.class));
     }
 
