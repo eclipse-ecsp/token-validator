@@ -79,6 +79,8 @@
         <httpclient5.version>5.6.1</httpclient5.version>
         <micrometer.version>1.16.5</micrometer.version>
         <ecsp.utils.version>1.2.0</ecsp.utils.version>
+        <tomcat.version>11.0.22</tomcat.version>
+        <classgraph.version>4.8.184</classgraph.version>
 
         <!-- Test dependency versions -->
         <junit.jupiter.version>6.0.3</junit.jupiter.version>
@@ -149,6 +151,16 @@
                 <groupId>org.eclipse.jetty.ee10</groupId>
                 <artifactId>jetty-ee10-webapp</artifactId>
                 <version>${jetty-ee10.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.tomcat.embed</groupId>
+                <artifactId>tomcat-embed-el</artifactId>
+                <version>${tomcat.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.classgraph</groupId>
+                <artifactId>classgraph</artifactId>
+                <version>${classgraph.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
