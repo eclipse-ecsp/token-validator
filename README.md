@@ -89,7 +89,8 @@ Add the dependency to your `pom.xml`:
 Configure key sources in `application.yml`:
 
 ```yaml
-jwt:
+token:
+  validator:
     whitelisted-algorithms:
       - RS256
       - ES256
