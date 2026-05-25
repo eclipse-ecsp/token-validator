@@ -19,6 +19,7 @@
 package org.eclipse.ecsp.tokenvalidator.model;
 
 import java.security.PublicKey;
+import java.util.List;
 
 /**
  * Resolved public key and its metadata, stored in {@code PublicKeyCache}.
@@ -33,21 +34,23 @@ public class PublicKeyInfo {
     private final PublicKey publicKey;
     private final String kid;
     private final String issuer;
-    private final String expectedAudience;
+    private final List<String> expectedAudiences;
 
     /**
      * Constructs a PublicKeyInfo with all required fields.
      *
-     * @param publicKey        the resolved public key
-     * @param kid              the key ID
-     * @param issuer           the issuer this key belongs to
-     * @param expectedAudience the expected audience for this issuer, or null to skip aud validation
+     * @param publicKey         the resolved public key
+     * @param kid               the key ID
+     * @param issuer            the issuer this key belongs to
+     * @param expectedAudiences the accepted audience values for this issuer, or null to skip
+     *                          aud validation
      */
-    public PublicKeyInfo(PublicKey publicKey, String kid, String issuer, String expectedAudience) {
+    public PublicKeyInfo(PublicKey publicKey, String kid, String issuer,
+                         List<String> expectedAudiences) {
         this.publicKey = publicKey;
         this.kid = kid;
         this.issuer = issuer;
-        this.expectedAudience = expectedAudience;
+        this.expectedAudiences = expectedAudiences;
     }
 
     /**
@@ -78,11 +81,14 @@ public class PublicKeyInfo {
     }
 
     /**
-     * Returns the expected audience for this issuer.
+     * Returns the accepted audience values for this issuer.
      *
-     * @return the expected audience string, or null if audience validation is not configured
+     * <p>A token is accepted when its {@code aud} claim contains at least one value
+     * from this list. Returns {@code null} when audience validation is not configured.
+     *
+     * @return the list of accepted audience values, or null if aud validation is not configured
      */
-    public String getExpectedAudience() {
-        return expectedAudience;
+    public List<String> getExpectedAudiences() {
+        return expectedAudiences;
     }
 }

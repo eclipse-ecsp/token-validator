@@ -255,18 +255,18 @@ public class DefaultPublicKeyManager implements PublicKeyManager {
 
     private void populateCache(PublicKeySource source, Map<String, PublicKey> keys) {
         String issuer = source.getIssuer();
-        String audience = source.getAudience();
+        List<String> audiences = source.getAudiences();
         Map<String, PublicKeyInfo> newEntries = HashMap.newHashMap(keys.size());
         for (Map.Entry<String, PublicKey> entry : keys.entrySet()) {
             String kid = entry.getKey();
-            PublicKeyInfo info = new PublicKeyInfo(entry.getValue(), kid, issuer, audience);
+            PublicKeyInfo info = new PublicKeyInfo(entry.getValue(), kid, issuer, audiences);
             String cacheKey = issuer + ":" + kid;
             newEntries.put(cacheKey, info);
         }
         if (source.isDefault() && !keys.isEmpty()) {
             String defaultKeyId = keys.keySet().iterator().next();
             PublicKey defaultKey = keys.get(defaultKeyId);
-            PublicKeyInfo defaultInfo = new PublicKeyInfo(defaultKey, defaultKeyId, issuer, audience);
+            PublicKeyInfo defaultInfo = new PublicKeyInfo(defaultKey, defaultKeyId, issuer, audiences);
             String defaultCacheKey = issuer + ":" + DefaultFallbackKeyStrategy.DEFAULT_KEY_SUFFIX;
             newEntries.put(defaultCacheKey, defaultInfo);
         }

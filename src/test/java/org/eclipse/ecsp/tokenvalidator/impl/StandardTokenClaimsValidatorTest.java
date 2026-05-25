@@ -131,7 +131,7 @@ class StandardTokenClaimsValidatorTest {
         Function<PublicKeyInfo, StandardTokenClaimsValidator> factory = StandardTokenClaimsValidator.factory(
             Duration.ZERO, issuerValidator, audienceValidator);
         PublicKeyInfo keyInfo = mock(PublicKeyInfo.class);
-        when(keyInfo.getExpectedAudience()).thenReturn(null);
+        when(keyInfo.getExpectedAudiences()).thenReturn(null);
         StandardTokenClaimsValidator validator = factory.apply(keyInfo);
         assertDoesNotThrow(() -> validator.validate(List.of(
             new TokenClaim("exp", Date.from(Instant.now().plusSeconds(TOKEN_LIFETIME_SECONDS))),

@@ -39,35 +39,35 @@ class StandardAudienceValidatorTest {
     @Test
     void nullExpectedAudienceSkipsValidation() {
         PublicKeyInfo keyInfo = mock(PublicKeyInfo.class);
-        when(keyInfo.getExpectedAudience()).thenReturn(null);
+        when(keyInfo.getExpectedAudiences()).thenReturn(null);
         assertDoesNotThrow(() -> validator.validate("any-aud", keyInfo));
     }
 
     @Test
     void stringAudienceMatchesPasses() {
         PublicKeyInfo keyInfo = mock(PublicKeyInfo.class);
-        when(keyInfo.getExpectedAudience()).thenReturn("myapi");
+        when(keyInfo.getExpectedAudiences()).thenReturn(List.of("myapi"));
         assertDoesNotThrow(() -> validator.validate("myapi", keyInfo));
     }
 
     @Test
     void stringAudienceMismatchThrows() {
         PublicKeyInfo keyInfo = mock(PublicKeyInfo.class);
-        when(keyInfo.getExpectedAudience()).thenReturn("myapi");
+        when(keyInfo.getExpectedAudiences()).thenReturn(List.of("myapi"));
         assertThrows(InvalidClaimException.class, () -> validator.validate("other", keyInfo));
     }
 
     @Test
     void listAudienceMatchesPasses() {
         PublicKeyInfo keyInfo = mock(PublicKeyInfo.class);
-        when(keyInfo.getExpectedAudience()).thenReturn("myapi");
+        when(keyInfo.getExpectedAudiences()).thenReturn(List.of("myapi"));
         assertDoesNotThrow(() -> validator.validate(List.of("other", "myapi"), keyInfo));
     }
 
     @Test
     void listAudienceMismatchThrows() {
         PublicKeyInfo keyInfo = mock(PublicKeyInfo.class);
-        when(keyInfo.getExpectedAudience()).thenReturn("myapi");
+        when(keyInfo.getExpectedAudiences()).thenReturn(List.of("myapi"));
         List<String> audiences = List.of("a", "b");
         assertThrows(InvalidClaimException.class, () -> validator.validate(audiences, keyInfo));
     }
@@ -75,7 +75,21 @@ class StandardAudienceValidatorTest {
     @Test
     void nullTokenAudienceThrows() {
         PublicKeyInfo keyInfo = mock(PublicKeyInfo.class);
-        when(keyInfo.getExpectedAudience()).thenReturn("myapi");
+        when(keyInfo.getExpectedAudiences()).thenReturn(List.of("myapi"));
         assertThrows(InvalidClaimException.class, () -> validator.validate(null, keyInfo));
+    }
+
+    @Test
+    void multipleExpectedAudiencesAnyMatchPasses() {
+        PublicKeyInfo keyInfo = mock(PublicKeyInfo.class);
+        when(keyInfo.getExpectedAudiences()).thenReturn(List.of("svc-a", "svc-b"));
+        assertDoesNotThrow(() -> validator.validate("svc-b", keyInfo));
+    }
+
+    @Test
+    void emptyExpectedAudiencesSkipsValidation() {
+        PublicKeyInfo keyInfo = mock(PublicKeyInfo.class);
+        when(keyInfo.getExpectedAudiences()).thenReturn(List.of());
+        assertDoesNotThrow(() -> validator.validate("any-aud", keyInfo));
     }
 }

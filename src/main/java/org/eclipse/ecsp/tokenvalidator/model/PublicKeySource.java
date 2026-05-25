@@ -19,6 +19,8 @@
 package org.eclipse.ecsp.tokenvalidator.model;
 
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Configuration object describing one key source for a single issuer.
@@ -36,7 +38,7 @@ public class PublicKeySource {
     private String url;
     private String location;
     private Duration refreshInterval;
-    private String audience;
+    private List<String> audiences = new ArrayList<>();
     private boolean isDefault;
 
     /**
@@ -137,21 +139,25 @@ public class PublicKeySource {
     }
 
     /**
-     * Returns the expected audience value for per-issuer audience validation.
+     * Returns the list of accepted audience values for per-issuer audience validation.
      *
-     * @return the expected audience string, or null to skip audience validation
+     * <p>A token is accepted when its {@code aud} claim contains at least one value
+     * from this list. Returns an empty list (never {@code null}) when audience
+     * validation is not configured for this source.
+     *
+     * @return the list of accepted audience values; empty means skip aud validation
      */
-    public String getAudience() {
-        return audience;
+    public List<String> getAudiences() {
+        return audiences;
     }
 
     /**
-     * Sets the expected audience value.
+     * Sets the list of accepted audience values.
      *
-     * @param audience the expected audience string
+     * @param audiences the list of accepted audience values
      */
-    public void setAudience(String audience) {
-        this.audience = audience;
+    public void setAudiences(List<String> audiences) {
+        this.audiences = audiences;
     }
 
     /**

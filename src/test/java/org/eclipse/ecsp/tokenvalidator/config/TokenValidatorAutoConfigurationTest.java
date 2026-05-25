@@ -64,9 +64,9 @@ class TokenValidatorAutoConfigurationTest {
     void withSources_tokenValidatorBeanIsRegistered() {
         contextRunner
             .withPropertyValues(
-                "token.validator.sources[0].id=k1",
-                "token.validator.sources[0].issuer=https://issuer.example.com",
-                "token.validator.sources[0].url=" + JWKS_URL)
+                "token.validator.key-sources[0].id=k1",
+                "token.validator.key-sources[0].issuer=https://issuer.example.com",
+                "token.validator.key-sources[0].url=" + JWKS_URL)
             .run(ctx -> assertThat(ctx).hasSingleBean(TokenValidator.class));
     }
 
@@ -78,10 +78,10 @@ class TokenValidatorAutoConfigurationTest {
     void withAudience_configuredAudienceValidatorIsApplied() {
         contextRunner
             .withPropertyValues(
-                "token.validator.sources[0].id=k1",
-                "token.validator.sources[0].issuer=https://issuer.example.com",
-                "token.validator.sources[0].url=" + JWKS_URL,
-                "token.validator.sources[0].audience=my-service")
+                "token.validator.key-sources[0].id=k1",
+                "token.validator.key-sources[0].issuer=https://issuer.example.com",
+                "token.validator.key-sources[0].url=" + JWKS_URL,
+                "token.validator.key-sources[0].audiences[0]=my-service")
             .run(ctx -> assertThat(ctx).hasSingleBean(TokenValidator.class));
     }
 
@@ -93,9 +93,9 @@ class TokenValidatorAutoConfigurationTest {
     void withMetricsRecorderPresent_cacheGaugeIsBound() {
         contextRunner
             .withPropertyValues(
-                "token.validator.sources[0].id=k1",
-                "token.validator.sources[0].issuer=https://issuer.example.com",
-                "token.validator.sources[0].url=" + JWKS_URL)
+                "token.validator.key-sources[0].id=k1",
+                "token.validator.key-sources[0].issuer=https://issuer.example.com",
+                "token.validator.key-sources[0].url=" + JWKS_URL)
             .withBean(
                 ValidationMetricsRecorder.class,
                 NoopValidationMetricsRecorder::new)
@@ -103,7 +103,7 @@ class TokenValidatorAutoConfigurationTest {
     }
 
     // -------------------------------------------------------------------------
-    // Custom PublicKeySourceProvider — no token.validator.sources needed
+    // Custom PublicKeySourceProvider — no token.validator.key-sources needed
     // -------------------------------------------------------------------------
 
     @Test

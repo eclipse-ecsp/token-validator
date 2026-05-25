@@ -113,7 +113,7 @@ public class DefaultFallbackKeyStrategy implements FallbackKeyStrategy {
                     }
                     String defaultKeyId = keys.keySet().iterator().next();
                     PublicKeyInfo info = new PublicKeyInfo(
-                        keys.get(defaultKeyId), defaultKeyId, issuer, source.getAudience());
+                        keys.get(defaultKeyId), defaultKeyId, issuer, source.getAudiences());
                     cache.put(issuer + ":" + DEFAULT_KEY_SUFFIX, info);
                     LOGGER.warn("Loaded and cached PEM fallback key for issuer={} kid={}",
                         issuer, kid);

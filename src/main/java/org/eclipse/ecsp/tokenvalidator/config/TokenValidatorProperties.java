@@ -39,7 +39,7 @@ import static org.eclipse.ecsp.tokenvalidator.config.TokenValidatorPropertyNames
 @ConfigurationProperties(prefix = PROPERTY_PREFIX)
 public class TokenValidatorProperties {
 
-    private List<PublicKeySource> sources = new ArrayList<>();
+    private List<PublicKeySource> keySources = new ArrayList<>();
     private List<String> whitelistedAlgorithms = List.of("RS256", "ES256");
     private Duration clockSkew = Duration.ZERO;
     private boolean failOnStartupError = true;
@@ -51,17 +51,17 @@ public class TokenValidatorProperties {
      *
      * @return list of public key sources
      */
-    public List<PublicKeySource> getSources() {
-        return sources;
+    public List<PublicKeySource> getKeySources() {
+        return keySources;
     }
 
     /**
      * Sets the list of configured public key sources.
      *
-     * @param sources list of public key sources
+     * @param keySources list of public key sources
      */
-    public void setSources(List<PublicKeySource> sources) {
-        this.sources = sources;
+    public void setKeySources(List<PublicKeySource> keySources) {
+        this.keySources = keySources;
     }
 
     /**

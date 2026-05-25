@@ -69,7 +69,7 @@ public class TokenValidatorAutoConfiguration {
     /**
      * Provides the default public key source provider backed by properties.
      *
-     * <p>Only registered when at least one {@code token.validator.sources} entry is present
+     * <p>Only registered when at least one {@code token.validator.key-sources} entry is present
      * in the environment. If no sources are configured, this bean — and all beans that depend
      * on {@link PublicKeySourceProvider} — are skipped, leaving the application context healthy.
      *
@@ -81,7 +81,7 @@ public class TokenValidatorAutoConfiguration {
     @Conditional(OnTokenValidatorSourcesConfigured.class)
     public JwtPropertiesPublicKeySourceProvider jwtPropertiesPublicKeySourceProvider(
         TokenValidatorProperties properties) {
-        return new JwtPropertiesPublicKeySourceProvider(properties.getSources());
+        return new JwtPropertiesPublicKeySourceProvider(properties.getKeySources());
     }
 
     /**
@@ -236,7 +236,7 @@ public class TokenValidatorAutoConfiguration {
             .map(PublicKeySource::getIssuer)
             .collect(Collectors.toSet());
         boolean hasAudience = sourceProvider.keySources().stream()
-            .anyMatch(src -> src.getAudience() != null);
+            .anyMatch(src -> src.getAudiences() != null && !src.getAudiences().isEmpty());
         TokenValidatorBuilder tvBuilder = TokenValidatorBuilder.builder()
             .publicKeyManager(publicKeyManager)
             .whitelistedAlgorithms(properties.getWhitelistedAlgorithms())

@@ -41,9 +41,9 @@ public final class TokenValidatorPropertyNames {
 
     /**
      * Fully-qualified property path for the key-sources list
-     * (i.e. {@code token.validator.sources}).
+     * (i.e. {@code token.validator.key-sources}).
      */
-    public static final String SOURCES_PROPERTY = PROPERTY_PREFIX + ".sources";
+    public static final String SOURCES_PROPERTY = PROPERTY_PREFIX + ".key-sources";
 
     private TokenValidatorPropertyNames() {
         // utility class — not instantiable

@@ -125,7 +125,7 @@ class StandardTokenClaimsValidatorBranchTest {
         KeyPairGenerator gen = KeyPairGenerator.getInstance("RSA");
         gen.initialize(FAST_RSA_KEY_SIZE);
         KeyPair kp = gen.generateKeyPair();
-        PublicKeyInfo keyInfo = new PublicKeyInfo(kp.getPublic(), "kid", ISSUER, "myAud");
+        PublicKeyInfo keyInfo = new PublicKeyInfo(kp.getPublic(), "kid", ISSUER, List.of("myAud"));
 
         StandardIssuerValidator issuerValidator = new StandardIssuerValidator(Set.of(ISSUER));
         StandardAudienceValidator audienceValidator = new StandardAudienceValidator();

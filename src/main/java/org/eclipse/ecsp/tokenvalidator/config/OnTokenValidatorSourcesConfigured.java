@@ -37,7 +37,7 @@ import static org.eclipse.ecsp.tokenvalidator.config.TokenValidatorPropertyNames
  *
  * <p>The condition matches when <em>either</em> of the following is true:
  * <ol>
- *   <li>At least one {@code token.validator.sources} entry is present in the
+ *   <li>At least one {@code token.validator.key-sources} entry is present in the
  *       environment, so the default {@link JwtPropertiesPublicKeySourceProvider}
  *       can be registered.</li>
  *   <li>A custom {@link PublicKeySourceProvider} bean is already registered in the
@@ -63,7 +63,7 @@ class OnTokenValidatorSourcesConfigured extends SpringBootCondition {
     @Override
     public ConditionOutcome getMatchOutcome(ConditionContext context,
                                             AnnotatedTypeMetadata metadata) {
-        // 1 — check whether token.validator.sources is populated
+        // 1 — check whether token.validator.key-sources is populated
         List<PublicKeySource> sources = Binder.get(context.getEnvironment())
             .bind(SOURCES_PROPERTY, Bindable.listOf(PublicKeySource.class))
             .orElse(Collections.emptyList());

@@ -27,10 +27,10 @@ import org.eclipse.ecsp.tokenvalidator.model.PublicKeyInfo;
  * <p>Injected into {@code StandardTokenClaimsValidator}; when no AudienceValidator is configured
  * the {@code aud} claim is not validated and the token is accepted regardless of its aud value.
  *
- * <p>{@code StandardAudienceValidator} reads the expected audience from
- * {@code PublicKeyInfo.expectedAudience}, which is populated from
- * {@code PublicKeySource.audience} at key-load time, enabling per-issuer audience enforcement.
- * When {@code expectedAudience} is null, validation is skipped for that issuer.
+ * <p>{@code StandardAudienceValidator} reads the expected audiences from
+ * {@code PublicKeyInfo.expectedAudiences}, which is populated from
+ * {@code PublicKeySource.audiences} at key-load time, enabling per-issuer audience enforcement.
+ * When {@code expectedAudiences} is null or empty, validation is skipped for that issuer.
  *
  * @author Abhishek Kumar
  */
@@ -39,10 +39,10 @@ public interface AudienceValidator {
     /**
      * Validates the audience value extracted from the token.
      *
-     * <p>When {@code keyInfo.getExpectedAudience()} is null, implementations must skip validation.
-     * When non-null, the token {@code aud} claim must match. The {@code aud} claim may be a single
-     * String or a JSON array of Strings (RFC 7519 §4.1.3). Accepts a match if any element of a
-     * multi-value {@code aud} array equals the expected audience.
+     * <p>When {@code keyInfo.getExpectedAudiences()} is null or empty, implementations must skip
+     * validation. When non-null and non-empty, at least one element of the token {@code aud}
+     * claim must match at least one element of the configured expected audiences.
+     * The {@code aud} claim may be a single String or a JSON array of Strings (RFC 7519 §4.1.3).
      *
      * @param audience the aud claim value (may be null if absent; String or List of String)
      * @param keyInfo  the resolved PublicKeyInfo providing the expected audience

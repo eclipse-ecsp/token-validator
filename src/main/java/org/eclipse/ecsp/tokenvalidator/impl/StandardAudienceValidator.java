@@ -24,13 +24,15 @@ import org.eclipse.ecsp.tokenvalidator.model.PublicKeyInfo;
 import org.eclipse.ecsp.utils.logger.IgniteLogger;
 import org.eclipse.ecsp.utils.logger.IgniteLoggerFactory;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Default audience validator that compares the token {@code aud} claim against
- * {@link PublicKeyInfo#getExpectedAudience()}.
+ * {@link PublicKeyInfo#getExpectedAudiences()}.
  *
- * <p>Skips validation when {@code expectedAudience} is null. Accepts any-match semantics
- * for multi-value {@code aud} arrays: at least one element must equal the expected audience.
+ * <p>Skips validation when {@code expectedAudiences} is null or empty. Accepts any-match
+ * semantics: the token {@code aud} claim (single string or array) must contain at least
+ * one value that is also present in the configured {@code expectedAudiences} list.
  *
  * @author Abhishek Kumar
  */
@@ -47,40 +49,44 @@ public class StandardAudienceValidator implements AudienceValidator {
     }
 
     /**
-     * Validates the audience claim against the expected audience from {@link PublicKeyInfo}.
+     * Validates the audience claim against the expected audiences from {@link PublicKeyInfo}.
      *
-     * <p>If {@code keyInfo.getExpectedAudience()} is null, validation is skipped.
-     * Accepts a match if any element of a multi-value aud array equals the expected audience.
+     * <p>If {@code keyInfo.getExpectedAudiences()} is null or empty, validation is skipped.
+     * Accepts a match if any element of the token {@code aud} claim equals any element of
+     * the configured expected audiences.
      *
      * @param audience the aud claim value (String or List of String, may be null)
-     * @param keyInfo  the resolved PublicKeyInfo providing the expected audience
-     * @throws InvalidClaimException if the audience is absent or does not match
+     * @param keyInfo  the resolved PublicKeyInfo providing the expected audiences
+     * @throws InvalidClaimException if the audience is absent or no token aud value matches
+     *                               any configured expected audience
      */
     @Override
     public void validate(Object audience, PublicKeyInfo keyInfo) throws InvalidClaimException {
-        String expectedAudience = keyInfo.getExpectedAudience();
-        if (expectedAudience == null) {
-            LOGGER.debug("No expected audience configured for issuer {}; skipping aud validation",
+        List<String> expectedAudiences = keyInfo.getExpectedAudiences();
+        if (expectedAudiences == null || expectedAudiences.isEmpty()) {
+            LOGGER.debug("No expected audiences configured for issuer {}; skipping aud validation",
                 keyInfo.getIssuer());
             return;
         }
         if (audience == null) {
             throw new InvalidClaimException(
-                "Token is missing 'aud' claim; expected: " + expectedAudience);
+                "Token is missing 'aud' claim; expected one of: " + expectedAudiences);
         }
-        boolean matched = matchesAudience(audience, expectedAudience);
+        boolean matched = matchesAudience(audience, expectedAudiences);
         if (!matched) {
             throw new InvalidClaimException(
-                "Token audience does not match expected audience: " + expectedAudience);
+                "Token audience does not match any expected audience: " + expectedAudiences);
         }
         LOGGER.debug("Audience validated successfully for issuer {}", keyInfo.getIssuer());
     }
 
-    private boolean matchesAudience(Object audience, String expectedAudience) {
+    private boolean matchesAudience(Object audience, List<String> expectedAudiences) {
         if (audience instanceof List<?> list) {
             return list.stream()
-                .anyMatch(el -> expectedAudience.equals(el != null ? el.toString() : null));
+                .filter(Objects::nonNull)
+                .map(Object::toString)
+                .anyMatch(expectedAudiences::contains);
         }
-        return expectedAudience.equals(audience.toString());
+        return expectedAudiences.contains(audience.toString());
     }
 }

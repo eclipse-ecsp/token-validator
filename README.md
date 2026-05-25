@@ -95,12 +95,13 @@ token:
       - RS256
       - ES256
     clock-skew: PT30S          # optional; default PT0S (no tolerance)
-    sources:
+    key-sources:
       - id: primary-idp
         issuer: https://auth.example.com
         url: https://auth.example.com/.well-known/jwks.json
         refresh-interval: PT12H
-        audience: https://api.example.com   # optional; omit to skip aud validation for this issuer
+        audiences:                           # optional; omit to skip aud validation for this issuer
+          - https://api.example.com
       - id: default-pem
         issuer: https://auth.example.com
         location: /keys/public-key.pem

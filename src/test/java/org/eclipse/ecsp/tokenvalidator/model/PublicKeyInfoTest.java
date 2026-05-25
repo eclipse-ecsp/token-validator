@@ -21,6 +21,7 @@ package org.eclipse.ecsp.tokenvalidator.model;
 import org.junit.jupiter.api.Test;
 import java.security.KeyPairGenerator;
 import java.security.PublicKey;
+import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -43,7 +44,7 @@ class PublicKeyInfoTest {
     @Test
     void getPublicKey() throws Exception {
         PublicKey key = generateKey();
-        PublicKeyInfo info = new PublicKeyInfo(key, "kid1", "iss1", "aud1");
+        PublicKeyInfo info = new PublicKeyInfo(key, "kid1", "iss1", List.of("aud1"));
         assertEquals(key, info.getPublicKey());
     }
 
@@ -64,24 +65,24 @@ class PublicKeyInfoTest {
     @Test
     void getExpectedAudience() throws Exception {
         PublicKey key = generateKey();
-        PublicKeyInfo info = new PublicKeyInfo(key, "kid1", "iss1", "myapi");
-        assertEquals("myapi", info.getExpectedAudience());
+        PublicKeyInfo info = new PublicKeyInfo(key, "kid1", "iss1", List.of("myapi"));
+        assertEquals(List.of("myapi"), info.getExpectedAudiences());
     }
 
     @Test
     void nullExpectedAudience() throws Exception {
         PublicKey key = generateKey();
         PublicKeyInfo info = new PublicKeyInfo(key, "kid1", "iss1", null);
-        assertNull(info.getExpectedAudience());
+        assertNull(info.getExpectedAudiences());
     }
 
     @Test
     void allFieldsNotNull() throws Exception {
         PublicKey key = generateKey();
-        PublicKeyInfo info = new PublicKeyInfo(key, "kid1", "iss1", "aud1");
+        PublicKeyInfo info = new PublicKeyInfo(key, "kid1", "iss1", List.of("aud1"));
         assertNotNull(info.getPublicKey());
         assertNotNull(info.getKid());
         assertNotNull(info.getIssuer());
-        assertNotNull(info.getExpectedAudience());
+        assertNotNull(info.getExpectedAudiences());
     }
 }

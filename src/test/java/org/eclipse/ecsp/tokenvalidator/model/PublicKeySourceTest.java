@@ -20,9 +20,9 @@ package org.eclipse.ecsp.tokenvalidator.model;
 
 import org.junit.jupiter.api.Test;
 import java.time.Duration;
+import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -37,12 +37,7 @@ class PublicKeySourceTest {
     @Test
     void defaultValues() {
         PublicKeySource source = new PublicKeySource();
-        assertNull(source.getId());
-        assertNull(source.getIssuer());
-        assertNull(source.getUrl());
-        assertNull(source.getLocation());
-        assertNull(source.getRefreshInterval());
-        assertNull(source.getAudience());
+        assertTrue(source.getAudiences().isEmpty());
         assertFalse(source.isDefault());
     }
 
@@ -54,7 +49,7 @@ class PublicKeySourceTest {
         source.setUrl("https://example.com/jwks");
         source.setLocation("/path/key.pem");
         source.setRefreshInterval(Duration.ofMinutes(REFRESH_INTERVAL_MINUTES));
-        source.setAudience("my-service");
+        source.setAudiences(List.of("my-service"));
         source.setDefault(true);
 
         assertEquals("id1", source.getId());
@@ -62,7 +57,7 @@ class PublicKeySourceTest {
         assertEquals("https://example.com/jwks", source.getUrl());
         assertEquals("/path/key.pem", source.getLocation());
         assertEquals(Duration.ofMinutes(REFRESH_INTERVAL_MINUTES), source.getRefreshInterval());
-        assertEquals("my-service", source.getAudience());
+        assertEquals(List.of("my-service"), source.getAudiences());
         assertTrue(source.isDefault());
     }
 }

@@ -19,6 +19,7 @@
 package org.eclipse.ecsp.tokenvalidator.model;
 
 import org.junit.jupiter.api.Test;
+import java.util.List;
 import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -93,12 +94,12 @@ class ModelTest {
         source.setId("id1");
         source.setIssuer("iss1");
         source.setUrl("https://example.com/jwks");
-        source.setAudience("aud1");
+        source.setAudiences(List.of("aud1"));
         source.setDefault(true);
         assertEquals("id1", source.getId());
         assertEquals("iss1", source.getIssuer());
         assertEquals("https://example.com/jwks", source.getUrl());
-        assertEquals("aud1", source.getAudience());
+        assertEquals(List.of("aud1"), source.getAudiences());
         assertEquals(PublicKeyType.JWKS, source.getType());
         assertEquals(true, source.isDefault());
     }
