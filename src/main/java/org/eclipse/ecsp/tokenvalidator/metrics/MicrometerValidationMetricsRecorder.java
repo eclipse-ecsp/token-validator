@@ -176,6 +176,7 @@ public final class MicrometerValidationMetricsRecorder implements ValidationMetr
         }
         Gauge.builder(config.getMetricName(TokenValidatorMetricsConfig.KEY_CACHE_SIZE),
                 sizeSupplier, IntSupplier::getAsInt)
+            .strongReference(true)
             .register(registry);
     }
 }

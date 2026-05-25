@@ -26,6 +26,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.util.concurrent.TimeUnit;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
@@ -170,6 +171,28 @@ class MicrometerValidationMetricsRecorderTest {
         Gauge gauge = registry.find("token.validator.key.cache.size").gauge();
         assertNotNull(gauge);
         assertEquals(CACHE_SIZE_VALUE, gauge.value(), DELTA);
+    }
+
+    @Test
+    void cacheSizeGaugeRemainsValidAfterGc() {
+        // Registers the gauge using a lambda that would be eligible for GC
+        // if the recorder did not hold a strong reference to it.
+        registerGaugeWithEphemeralLambda();
+
+        // Request GC; the supplier lambda must survive because the recorder holds a
+        // strong reference — without the fix the gauge would return NaN here.
+        System.gc();
+        System.runFinalization(); // NOSONAR
+
+        Gauge gauge = registry.find("token.validator.key.cache.size").gauge();
+        assertNotNull(gauge);
+        assertFalse(Double.isNaN(gauge.value()));
+    }
+
+    /** Helper that creates a supplier lambda in its own stack frame and returns,
+     *  making the lambda eligible for GC unless the recorder keeps a strong ref. */
+    private void registerGaugeWithEphemeralLambda() {
+        recorder.bindCacheSizeGauge(() -> CACHE_SIZE_VALUE);
     }
 
     @Test
