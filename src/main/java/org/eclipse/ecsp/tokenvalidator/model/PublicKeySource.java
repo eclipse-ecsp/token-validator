@@ -161,18 +161,22 @@ public class PublicKeySource {
     }
 
     /**
-     * Returns whether this source is the default key for its issuer.
+     * Returns whether this source is the single global default PEM key source.
      *
-     * @return true if this is the issuer's default key source
+     * <p>At most one source across all configured sources should have this flag set.
+     * Only PEM sources (those with a non-null {@code location}) are eligible;
+     * JWKS URL sources with this flag set are silently ignored during fallback resolution.
+     *
+     * @return true if this is the global default PEM key source
      */
     public boolean isDefault() {
         return isDefault;
     }
 
     /**
-     * Sets whether this source is the default key for its issuer.
+     * Sets whether this source is the single global default PEM key source.
      *
-     * @param defaultSource true if this is the issuer's default key source
+     * @param defaultSource true if this is the global default PEM key source
      */
     public void setDefault(boolean defaultSource) {
         this.isDefault = defaultSource;

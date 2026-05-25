@@ -32,6 +32,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -51,10 +53,11 @@ class FallbackKeyStrategyTest {
     }
 
     @Test
-    void defaultFallbackFindsDefaultKey() throws Exception {
+    void defaultFallbackGlobalDefaultKeyInCacheIsFound() throws Exception {
         InMemoryPublicKeyCache cache = new InMemoryPublicKeyCache(CACHE_CAPACITY);
         PublicKey key = generateKey();
-        cache.put("iss1:default", new PublicKeyInfo(key, "default", "iss1", null));
+        cache.put(DefaultFallbackKeyStrategy.GLOBAL_DEFAULT_KEY,
+            new PublicKeyInfo(key, "default-kid", null, null));
         DefaultFallbackKeyStrategy strategy = new DefaultFallbackKeyStrategy();
         Optional<PublicKeyInfo> result = strategy.findFallback("iss1", "missing-kid", cache);
         assertTrue(result.isPresent());
@@ -77,7 +80,7 @@ class FallbackKeyStrategyTest {
     }
 
     @Test
-    void defaultFallbackWithPemLoaderLoadsKeyWhenCacheMiss() throws Exception {
+    void defaultFallbackWithPemLoaderLoadsGlobalDefaultOnCacheMiss() throws Exception {
         final InMemoryPublicKeyCache cache = new InMemoryPublicKeyCache(CACHE_CAPACITY);
         PublicKey key = generateKey();
 
@@ -96,15 +99,60 @@ class FallbackKeyStrategyTest {
 
         assertTrue(result.isPresent());
         assertNotNull(result.get().getPublicKey());
-        // Should also have been cached
-        assertTrue(cache.get("iss1:default").isPresent());
+        // Key must be cached under the global default key
+        assertTrue(cache.get(DefaultFallbackKeyStrategy.GLOBAL_DEFAULT_KEY).isPresent());
     }
 
     @Test
-    void defaultFallbackWithPemLoaderReturnsEmptyWhenNoMatchingSource() {
+    void defaultFallbackWithPemLoaderUsesGlobalDefaultWhenIssuerDoesNotMatch() throws Exception {
+        final InMemoryPublicKeyCache cache = new InMemoryPublicKeyCache(CACHE_CAPACITY);
+        PublicKey key = generateKey();
+        PemPublicKeyLoader pemLoader = mock(PemPublicKeyLoader.class);
+        when(pemLoader.loadKeys(any(PublicKeySource.class))).thenReturn(Map.of("pemKid", key));
+
+        // Source belongs to a different issuer but is marked as default
+        PublicKeySource source = new PublicKeySource();
+        source.setIssuer("other-issuer");
+        source.setLocation("/keys/pub.pem");
+        source.setDefault(true);
+
+        DefaultFallbackKeyStrategy strategy =
+            new DefaultFallbackKeyStrategy(pemLoader, List.of(source));
+
+        // Global default lookup should find the key even though issuer is "iss1"
+        Optional<PublicKeyInfo> result = strategy.findFallback("iss1", "kid", cache);
+        assertTrue(result.isPresent(), "Global default PEM source should be used when issuer does not match");
+        assertNotNull(result.get().getPublicKey());
+        // Global default should be cached
+        assertTrue(cache.get(DefaultFallbackKeyStrategy.GLOBAL_DEFAULT_KEY).isPresent());
+    }
+
+    @Test
+    void defaultFallbackReturnsEmptyWhenNoDefaultSourceExists() {
         final InMemoryPublicKeyCache cache = new InMemoryPublicKeyCache(CACHE_CAPACITY);
         PemPublicKeyLoader pemLoader = mock(PemPublicKeyLoader.class);
 
+        // Source exists but is NOT marked as default
+        PublicKeySource source = new PublicKeySource();
+        source.setIssuer("iss1");
+        source.setLocation("/keys/pub.pem");
+        source.setDefault(false);
+
+        DefaultFallbackKeyStrategy strategy =
+            new DefaultFallbackKeyStrategy(pemLoader, List.of(source));
+
+        Optional<PublicKeyInfo> result = strategy.findFallback("iss1", "kid", cache);
+        assertFalse(result.isPresent(), "Should return empty when no source is marked as default");
+    }
+
+    @Test
+    void defaultFallbackGlobalDefaultCacheHitSkipsPemLoad() throws Exception {
+        InMemoryPublicKeyCache cache = new InMemoryPublicKeyCache(CACHE_CAPACITY);
+        PublicKey cachedKey = generateKey();
+        cache.put(DefaultFallbackKeyStrategy.GLOBAL_DEFAULT_KEY,
+            new PublicKeyInfo(cachedKey, "global-kid", "any-issuer", null));
+
+        PemPublicKeyLoader pemLoader = mock(PemPublicKeyLoader.class);
         PublicKeySource source = new PublicKeySource();
         source.setIssuer("other-issuer");
         source.setLocation("/keys/pub.pem");
@@ -114,7 +162,27 @@ class FallbackKeyStrategyTest {
             new DefaultFallbackKeyStrategy(pemLoader, List.of(source));
 
         Optional<PublicKeyInfo> result = strategy.findFallback("iss1", "kid", cache);
-        assertFalse(result.isPresent());
+        assertTrue(result.isPresent());
+        verify(pemLoader, never()).loadKeys(any());
+    }
+
+    @Test
+    void defaultFallbackJwksSourceNotEligibleForGlobalDefault() {
+        final InMemoryPublicKeyCache cache = new InMemoryPublicKeyCache(CACHE_CAPACITY);
+        PemPublicKeyLoader pemLoader = mock(PemPublicKeyLoader.class);
+
+        // JWKS source (url set, no location) marked as default — must NOT be used as global default
+        PublicKeySource source = new PublicKeySource();
+        source.setIssuer("other-issuer");
+        source.setUrl("https://auth.example.com/.well-known/jwks.json");
+        source.setDefault(true);
+        // location is null → not a PEM source
+
+        DefaultFallbackKeyStrategy strategy =
+            new DefaultFallbackKeyStrategy(pemLoader, List.of(source));
+
+        Optional<PublicKeyInfo> result = strategy.findFallback("iss1", "kid", cache);
+        assertFalse(result.isPresent(), "JWKS sources must not be eligible as global default");
     }
 
     @Test
@@ -154,24 +222,5 @@ class FallbackKeyStrategyTest {
         assertFalse(result.isPresent());
     }
 
-    @Test
-    void defaultFallbackPrefersCachedDefaultKeyOverPemLoad() throws Exception {
-        InMemoryPublicKeyCache cache = new InMemoryPublicKeyCache(CACHE_CAPACITY);
-        PublicKey cachedKey = generateKey();
-        cache.put("iss1:default", new PublicKeyInfo(cachedKey, "default", "iss1", null));
-
-        PemPublicKeyLoader pemLoader = mock(PemPublicKeyLoader.class);
-        // pemLoader should NOT be called
-        PublicKeySource source = new PublicKeySource();
-        source.setIssuer("iss1");
-        source.setLocation("/keys/pub.pem");
-        source.setDefault(true);
-
-        DefaultFallbackKeyStrategy strategy =
-            new DefaultFallbackKeyStrategy(pemLoader, List.of(source));
-
-        Optional<PublicKeyInfo> result = strategy.findFallback("iss1", "kid", cache);
-        assertTrue(result.isPresent());
-        // The returned key should be the cached one, not from the PEM loader
-    }
 }
+

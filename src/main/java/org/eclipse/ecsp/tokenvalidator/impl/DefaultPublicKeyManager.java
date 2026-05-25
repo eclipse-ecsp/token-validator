@@ -263,12 +263,11 @@ public class DefaultPublicKeyManager implements PublicKeyManager {
             String cacheKey = issuer + ":" + kid;
             newEntries.put(cacheKey, info);
         }
-        if (source.isDefault() && !keys.isEmpty()) {
+        if (source.isDefault() && source.getType() == PublicKeyType.PEM && !keys.isEmpty()) {
             String defaultKeyId = keys.keySet().iterator().next();
             PublicKey defaultKey = keys.get(defaultKeyId);
             PublicKeyInfo defaultInfo = new PublicKeyInfo(defaultKey, defaultKeyId, issuer, audiences);
-            String defaultCacheKey = issuer + ":" + DefaultFallbackKeyStrategy.DEFAULT_KEY_SUFFIX;
-            newEntries.put(defaultCacheKey, defaultInfo);
+            newEntries.put(DefaultFallbackKeyStrategy.GLOBAL_DEFAULT_KEY, defaultInfo);
         }
         for (Map.Entry<String, PublicKeyInfo> entry : newEntries.entrySet()) {
             cache.put(entry.getKey(), entry.getValue());

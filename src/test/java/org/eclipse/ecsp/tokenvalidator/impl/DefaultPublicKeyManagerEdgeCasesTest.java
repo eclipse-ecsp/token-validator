@@ -68,7 +68,37 @@ class DefaultPublicKeyManagerEdgeCasesTest {
     }
 
     @Test
-    void refreshDefaultKeyIsStoredWithDefaultSuffix() throws Exception {
+    void refreshDefaultPemKeyIsStoredUnderGlobalDefaultKey() throws Exception {
+        java.security.KeyPairGenerator gen = java.security.KeyPairGenerator.getInstance("RSA");
+        gen.initialize(RSA_KEY_SIZE);
+        PublicKey key = gen.generateKeyPair().getPublic();
+
+        PublicKeyLoader loader = mock(PublicKeyLoader.class);
+        when(loader.getType()).thenReturn(PublicKeyType.PEM);
+        when(loader.loadKeys(any(PublicKeySource.class))).thenReturn(Map.of("kid1", key));
+
+        PublicKeySource source = new PublicKeySource();
+        source.setId("src1");
+        source.setIssuer("iss1");
+        source.setLocation("/keys/pub.pem");
+        source.setDefault(true);
+
+        PublicKeySourceProvider provider = mock(PublicKeySourceProvider.class);
+        when(provider.keySources()).thenReturn(List.of(source));
+
+        InMemoryPublicKeyCache cache = new InMemoryPublicKeyCache(CACHE_CAPACITY);
+        DefaultPublicKeyManager manager = new DefaultPublicKeyManager(
+            List.of(loader), List.of(provider), cache, new NoFallbackStrategy(), false);
+        manager.refreshPublicKeys();
+
+        // Default PEM key must be stored under the global default key
+        java.util.Optional<org.eclipse.ecsp.tokenvalidator.model.PublicKeyInfo> defaultKey =
+            cache.get(DefaultFallbackKeyStrategy.GLOBAL_DEFAULT_KEY);
+        assertTrue(defaultKey.isPresent());
+    }
+
+    @Test
+    void refreshJwksDefaultFlagDoesNotPopulateGlobalDefaultKey() throws Exception {
         java.security.KeyPairGenerator gen = java.security.KeyPairGenerator.getInstance("RSA");
         gen.initialize(RSA_KEY_SIZE);
         PublicKey key = gen.generateKeyPair().getPublic();
@@ -77,6 +107,7 @@ class DefaultPublicKeyManagerEdgeCasesTest {
         when(loader.getType()).thenReturn(PublicKeyType.JWKS);
         when(loader.loadKeys(any(PublicKeySource.class))).thenReturn(Map.of("kid1", key));
 
+        // JWKS source marked default — must NOT populate global:default
         PublicKeySource source = new PublicKeySource();
         source.setId("src1");
         source.setIssuer("iss1");
@@ -91,10 +122,7 @@ class DefaultPublicKeyManagerEdgeCasesTest {
             List.of(loader), List.of(provider), cache, new NoFallbackStrategy(), false);
         manager.refreshPublicKeys();
 
-        // Default key should be stored
-        java.util.Optional<org.eclipse.ecsp.tokenvalidator.model.PublicKeyInfo> defaultKey =
-            cache.get("iss1:default");
-        assertTrue(defaultKey.isPresent());
+        assertFalse(cache.get(DefaultFallbackKeyStrategy.GLOBAL_DEFAULT_KEY).isPresent());
     }
 
     @Test
@@ -115,12 +143,13 @@ class DefaultPublicKeyManagerEdgeCasesTest {
         PublicKey key = gen.generateKeyPair().getPublic();
 
         InMemoryPublicKeyCache cache = new InMemoryPublicKeyCache(CACHE_CAPACITY);
-        cache.put("iss1:default", new PublicKeyInfo(key, "default", "iss1", null));
+        cache.put(DefaultFallbackKeyStrategy.GLOBAL_DEFAULT_KEY,
+            new PublicKeyInfo(key, "default-kid", null, null));
 
         DefaultPublicKeyManager manager = new DefaultPublicKeyManager(
             List.of(), List.of(), cache, new DefaultFallbackKeyStrategy(), false);
 
-        // Blank kid bypasses direct cache lookup, falls to fallback
+        // Blank kid bypasses direct cache lookup, falls to global default fallback
         Optional<PublicKeyInfo> result = manager.findPublicKey("   ", "iss1");
         assertTrue(result.isPresent());
     }

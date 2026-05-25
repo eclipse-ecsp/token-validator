@@ -88,7 +88,8 @@ class DefaultPublicKeyManagerTest {
     void findPublicKeyUseFallbackOnCacheMiss() throws Exception {
         InMemoryPublicKeyCache cache = new InMemoryPublicKeyCache(CACHE_CAPACITY);
         PublicKey key = generateKey();
-        cache.put("iss1:default", new PublicKeyInfo(key, "default", "iss1", null));
+        cache.put(DefaultFallbackKeyStrategy.GLOBAL_DEFAULT_KEY,
+            new PublicKeyInfo(key, "default-kid", null, null));
 
         PublicKeyLoader loader = mock(PublicKeyLoader.class);
         PublicKeySourceProvider provider = mock(PublicKeySourceProvider.class);
@@ -206,7 +207,8 @@ class DefaultPublicKeyManagerTest {
     void nullKidFallbackLookup() throws Exception {
         InMemoryPublicKeyCache cache = new InMemoryPublicKeyCache(CACHE_CAPACITY);
         PublicKey key = generateKey();
-        cache.put("iss1:default", new PublicKeyInfo(key, "default", "iss1", null));
+        cache.put(DefaultFallbackKeyStrategy.GLOBAL_DEFAULT_KEY,
+            new PublicKeyInfo(key, "default-kid", null, null));
         PublicKeyLoader loader = mock(PublicKeyLoader.class);
         PublicKeySourceProvider provider = mock(PublicKeySourceProvider.class);
         DefaultPublicKeyManager manager = buildManager(loader, provider, cache,
