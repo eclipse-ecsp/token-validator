@@ -18,6 +18,7 @@
 
 package org.eclipse.ecsp.tokenvalidator.config;
 
+import org.eclipse.ecsp.tokenvalidator.JwksRetryStrategy;
 import org.eclipse.ecsp.tokenvalidator.PublicKeyCache;
 import org.eclipse.ecsp.tokenvalidator.PublicKeyLoader;
 import org.eclipse.ecsp.tokenvalidator.PublicKeyManager;
@@ -85,24 +86,34 @@ public class TokenValidatorAutoConfiguration {
     }
 
     /**
+     * Provides the default JWKS retry strategy.
+     *
+     * @param properties the bound token validator properties
+     * @return an ExponentialBackoffJwksRetryStrategy
+     */
+    @Bean
+    @ConditionalOnMissingBean(JwksRetryStrategy.class)
+    public JwksRetryStrategy jwksRetryStrategy(TokenValidatorProperties properties) {
+        TokenValidatorProperties.RetryProperties rp = properties.getJwksRetry();
+        return new ExponentialBackoffJwksRetryStrategy(rp.getInitialDelay(), rp.getMaxAttempts());
+    }
+
+    /**
      * Provides the default JWKS public key loader. Registered as a bean so Spring
      * manages its lifecycle and closes the underlying HTTP client on context shutdown.
      *
      * @param recorderProvider optional metrics recorder provider
-     * @param properties the bound token validator properties, used to configure the retry strategy
+     * @param jwksRetryStrategy the JWKS retry strategy
      * @return a JwksPublicKeyLoader
      */
     @Bean
     @ConditionalOnMissingBean(JwksPublicKeyLoader.class)
     public JwksPublicKeyLoader jwksPublicKeyLoader(
         ObjectProvider<ValidationMetricsRecorder> recorderProvider,
-        TokenValidatorProperties properties) {
+        JwksRetryStrategy jwksRetryStrategy) {
         ValidationMetricsRecorder recorder = recorderProvider.getIfAvailable(
             NoopValidationMetricsRecorder::new);
-        return new JwksPublicKeyLoader(new ExponentialBackoffJwksRetryStrategy(
-            properties.getJwksRetry().getInitialDelay(),
-            properties.getJwksRetry().getMaxAttempts()
-        ), recorder);
+        return new JwksPublicKeyLoader(jwksRetryStrategy, recorder);
     }
 
     /**
