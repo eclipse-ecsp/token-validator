@@ -18,6 +18,8 @@
 
 package org.eclipse.ecsp.tokenvalidator.config;
 
+import org.eclipse.ecsp.tokenvalidator.config.TokenValidatorProperties.CacheProperties;
+import org.eclipse.ecsp.tokenvalidator.config.TokenValidatorProperties.MetricsProperties;
 import org.eclipse.ecsp.tokenvalidator.model.PublicKeySource;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import java.time.Duration;
@@ -45,6 +47,8 @@ public class TokenValidatorProperties {
     private boolean failOnStartupError = true;
     private CacheProperties cache = new CacheProperties();
     private MetricsProperties metrics = new MetricsProperties();
+    private RetryProperties jwksRetry = new RetryProperties();
+
 
     /**
      * Returns the list of configured public key sources.
@@ -155,6 +159,24 @@ public class TokenValidatorProperties {
     }
 
     /**
+     * Returns the JWKS retry strategy configuration.
+     *
+     * @return the retry properties
+     */
+    public RetryProperties getJwksRetry() {
+        return jwksRetry;
+    }
+
+    /**
+     * Sets the JWKS retry strategy configuration.
+     *
+     * @param jwksRetry the retry properties
+     */
+    public void setJwksRetry(RetryProperties jwksRetry) {
+        this.jwksRetry = jwksRetry;
+    }
+
+    /**
      * Nested cache configuration properties.
      */
     public static class CacheProperties {
@@ -260,6 +282,51 @@ public class TokenValidatorProperties {
          */
         public void setDisabledMetrics(List<String> disabledMetrics) {
             this.disabledMetrics = disabledMetrics;
+        }
+    }
+
+    /**
+     * Nested JWKS retry strategy configuration properties.
+     */
+    public static class RetryProperties {
+
+        private Duration initialDelay = Duration.ofSeconds(1);
+        private int maxAttempts = 3;
+
+        /**
+         * Returns the initial delay before the first retry attempt.
+         *
+         * @return the initial delay duration
+         */
+        public Duration getInitialDelay() {
+            return initialDelay;
+        }
+
+        /**
+         * Sets the initial delay before the first retry attempt.
+         *
+         * @param initialDelay the initial delay duration
+         */
+        public void setInitialDelay(Duration initialDelay) {
+            this.initialDelay = initialDelay;
+        }
+
+        /**
+         * Returns the maximum number of retry attempts (including the first attempt).
+         *
+         * @return the maximum number of attempts
+         */
+        public int getMaxAttempts() {
+            return maxAttempts;
+        }
+
+        /**
+         * Sets the maximum number of retry attempts (including the first attempt).
+         *
+         * @param maxAttempts the maximum number of attempts
+         */
+        public void setMaxAttempts(int maxAttempts) {
+            this.maxAttempts = maxAttempts;
         }
     }
 }

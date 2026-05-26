@@ -89,15 +89,20 @@ public class TokenValidatorAutoConfiguration {
      * manages its lifecycle and closes the underlying HTTP client on context shutdown.
      *
      * @param recorderProvider optional metrics recorder provider
+     * @param properties the bound token validator properties, used to configure the retry strategy
      * @return a JwksPublicKeyLoader
      */
     @Bean
     @ConditionalOnMissingBean(JwksPublicKeyLoader.class)
     public JwksPublicKeyLoader jwksPublicKeyLoader(
-        ObjectProvider<ValidationMetricsRecorder> recorderProvider) {
+        ObjectProvider<ValidationMetricsRecorder> recorderProvider,
+        TokenValidatorProperties properties) {
         ValidationMetricsRecorder recorder = recorderProvider.getIfAvailable(
             NoopValidationMetricsRecorder::new);
-        return new JwksPublicKeyLoader(new ExponentialBackoffJwksRetryStrategy(), recorder);
+        return new JwksPublicKeyLoader(new ExponentialBackoffJwksRetryStrategy(
+            properties.getJwksRetry().getInitialDelay(),
+            properties.getJwksRetry().getMaxAttempts()
+        ), recorder);
     }
 
     /**
