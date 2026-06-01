@@ -23,10 +23,12 @@ import org.eclipse.ecsp.tokenvalidator.PublicKeyCache;
 import org.eclipse.ecsp.tokenvalidator.PublicKeyLoader;
 import org.eclipse.ecsp.tokenvalidator.PublicKeyManager;
 import org.eclipse.ecsp.tokenvalidator.PublicKeySourceProvider;
+import org.eclipse.ecsp.tokenvalidator.ScopeValidator;
 import org.eclipse.ecsp.tokenvalidator.TokenValidator;
 import org.eclipse.ecsp.tokenvalidator.TokenValidatorBuilder;
 import org.eclipse.ecsp.tokenvalidator.impl.DefaultFallbackKeyStrategy;
 import org.eclipse.ecsp.tokenvalidator.impl.DefaultPublicKeyManager;
+import org.eclipse.ecsp.tokenvalidator.impl.DefaultScopeValidator;
 import org.eclipse.ecsp.tokenvalidator.impl.ExponentialBackoffJwksRetryStrategy;
 import org.eclipse.ecsp.tokenvalidator.impl.InMemoryPublicKeyCache;
 import org.eclipse.ecsp.tokenvalidator.impl.JwksPublicKeyLoader;
@@ -66,6 +68,20 @@ import java.util.stream.Collectors;
 @Conditional(OnTokenValidatorSourcesConfigured.class)
 @EnableConfigurationProperties(TokenValidatorProperties.class)
 public class TokenValidatorAutoConfiguration {
+
+    /**
+     * Provides the default {@link ScopeValidator} bean backed by the configured scope prefixes
+     * and match mode. Consumers can override by registering their own {@link ScopeValidator} bean.
+     *
+     * @param properties the bound token validator properties
+     * @return a DefaultScopeValidator
+     */
+    @Bean
+    @ConditionalOnMissingBean(ScopeValidator.class)
+    public ScopeValidator defaultScopeValidator(TokenValidatorProperties properties) {
+        TokenValidatorProperties.ScopeProperties sp = properties.getScope();
+        return new DefaultScopeValidator(sp.getPrefixes(), sp.getMatchMode());
+    }
 
     /**
      * Provides the default public key source provider backed by properties.

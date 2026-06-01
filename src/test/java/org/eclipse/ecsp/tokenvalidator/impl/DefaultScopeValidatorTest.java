@@ -60,8 +60,9 @@ class DefaultScopeValidatorTest {
     @Test
     void prefixFilterKeepsMatchingScopes() {
         DefaultScopeValidator validator = new DefaultScopeValidator(Set.of("api:"));
+        // prefix is stripped: "api:read" → "read", required scope must be without prefix
         assertDoesNotThrow(
-            () -> validator.validate(List.of("api:read", "api:write"), List.of("api:read")));
+            () -> validator.validate(List.of("api:read", "api:write"), List.of("read")));
     }
 
     @Test
@@ -132,36 +133,38 @@ class DefaultScopeValidatorTest {
     @Test
     void anyModeWithPrefixFilterMatchPasses() {
         DefaultScopeValidator validator = new DefaultScopeValidator(Set.of("api:"), ScopeMatchMode.ANY);
+        // prefix is stripped: "api:write" → "write", required scope must be without prefix
         assertDoesNotThrow(() -> validator.validate(
-            List.of("api:read", "api:write"), List.of("api:write", "api:admin")));
+            List.of("api:read", "api:write"), List.of("write", "admin")));
     }
 
     @Test
     void anyModeWithPrefixFilterNoMatchThrows() {
         DefaultScopeValidator validator = new DefaultScopeValidator(Set.of("api:"), ScopeMatchMode.ANY);
-        List<String> required = List.of("api:admin");
+        // prefix stripped: filtered set is {"read", "write"}, "admin" is not present
+        List<String> required = List.of("admin");
         List<String> tokenScopes = List.of("api:read", "api:write");
         try {
             validator.validate(tokenScopes, required);
             Assertions.fail("Expected InvalidClaimException to be thrown");
         } catch (InvalidClaimException e) {
             Assertions.assertTrue(e.getMessage()
-                .contains("Token does not contain any of the required scopes: [api:admin]"));
+                .contains("Token does not contain any of the required scopes: [admin]"));
         }
     }
 
     @Test
     void anyModeNonPrefixScopesFilteredOutAndNoneMatchThrows() {
         DefaultScopeValidator validator = new DefaultScopeValidator(Set.of("api:"), ScopeMatchMode.ANY);
-        // token has "read" (no prefix match) and "api:write"; required is "api:read"
-        List<String> required = List.of("api:read");
+        // "read" has no prefix match → excluded; "api:write" → stripped to "write"
+        List<String> required = List.of("admin");
         List<String> tokenScopes = List.of("read", "api:write");
         try {
             validator.validate(tokenScopes, required);
             Assertions.fail("Expected InvalidClaimException to be thrown");
         } catch (InvalidClaimException e) {
             Assertions.assertTrue(e.getMessage()
-                .contains("Token does not contain any of the required scopes: [api:read]"));
+                .contains("Token does not contain any of the required scopes: [admin]"));
         }
     }
 
@@ -170,6 +173,61 @@ class DefaultScopeValidatorTest {
         DefaultScopeValidator validator = new DefaultScopeValidator(Set.of(), ScopeMatchMode.ANY);
         List<TokenClaim> claims = List.of(new TokenClaim("scope", "read write"));
         assertDoesNotThrow(() -> validator.validateClaims(claims, List.of("write", "admin")));
+    }
+
+    // --- Prefix stripping tests ---
+
+    @Test
+    void prefixIsStrippedFromMatchingScope() {
+        DefaultScopeValidator validator = new DefaultScopeValidator(Set.of("abc/", "xyz/"));
+        // "abc/Scope1" → "Scope1", "xyz/Scope2" → "Scope2"; required without prefix
+        assertDoesNotThrow(() -> validator.validate(
+            List.of("abc/Scope1", "xyz/Scope2"), List.of("Scope1", "Scope2")));
+    }
+
+    @Test
+    void prefixStrippedScopeNotMatchedByOriginalName() {
+        DefaultScopeValidator validator = new DefaultScopeValidator(Set.of("abc/"));
+        List<String> tokenScopes = List.of("abc/Scope1");
+        List<String> required = List.of("abc/Scope1");
+        try {
+            validator.validate(tokenScopes, required);
+            Assertions.fail("Expected InvalidClaimException to be thrown");
+        } catch (InvalidClaimException e) {
+            Assertions.assertTrue(e.getMessage()
+                .contains("Token is missing required scopes: [abc/Scope1]"));
+        }
+    }
+
+    @Test
+    void scopeWithoutMatchingPrefixIsExcluded() {
+        DefaultScopeValidator validator = new DefaultScopeValidator(Set.of("abc/"));
+        // "other/Scope" has no matching prefix → excluded; required "Scope" not in filtered set
+        List<String> required = List.of("Scope");
+        List<String> tokenScopes = List.of("other/Scope");
+        try {
+            validator.validate(tokenScopes, required);
+            Assertions.fail("Expected InvalidClaimException to be thrown");
+        } catch (InvalidClaimException e) {
+            Assertions.assertTrue(e.getMessage()
+                .contains("Token is missing required scopes: [Scope]"));
+        }
+    }
+
+    @Test
+    void multiplePrefixesBothStrippedAllMode() {
+        DefaultScopeValidator validator = new DefaultScopeValidator(Set.of("abc/", "xyz/"));
+        // abc/Read → Read, xyz/Write → Write; require both
+        assertDoesNotThrow(() -> validator.validate(
+            List.of("abc/Read", "xyz/Write", "other/Admin"), List.of("Read", "Write")));
+    }
+
+    @Test
+    void multiplePrefixesAnyModeStrippedScopeMatches() {
+        DefaultScopeValidator validator = new DefaultScopeValidator(Set.of("abc/", "xyz/"), ScopeMatchMode.ANY);
+        // abc/Read → Read; required ["Read", "Admin"] — "Read" matches
+        assertDoesNotThrow(() -> validator.validate(
+            List.of("abc/Read", "xyz/Write"), List.of("Read", "Admin")));
     }
 
     @Test

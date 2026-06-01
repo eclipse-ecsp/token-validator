@@ -18,15 +18,16 @@
 
 package org.eclipse.ecsp.tokenvalidator.config;
 
-import org.eclipse.ecsp.tokenvalidator.config.TokenValidatorProperties.CacheProperties;
-import org.eclipse.ecsp.tokenvalidator.config.TokenValidatorProperties.MetricsProperties;
+import org.eclipse.ecsp.tokenvalidator.ScopeMatchMode;
 import org.eclipse.ecsp.tokenvalidator.model.PublicKeySource;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import static org.eclipse.ecsp.tokenvalidator.config.TokenValidatorPropertyNames.PROPERTY_PREFIX;
 
 /**
@@ -48,6 +49,7 @@ public class TokenValidatorProperties {
     private CacheProperties cache = new CacheProperties();
     private MetricsProperties metrics = new MetricsProperties();
     private RetryProperties jwksRetry = new RetryProperties();
+    private ScopeProperties scope = new ScopeProperties();
 
 
     /**
@@ -174,6 +176,76 @@ public class TokenValidatorProperties {
      */
     public void setJwksRetry(RetryProperties jwksRetry) {
         this.jwksRetry = jwksRetry;
+    }
+
+    /**
+     * Returns the scope validation configuration.
+     *
+     * @return the scope properties
+     */
+    public ScopeProperties getScope() {
+        return scope;
+    }
+
+    /**
+     * Sets the scope validation configuration.
+     *
+     * @param scope the scope properties
+     */
+    public void setScope(ScopeProperties scope) {
+        this.scope = scope;
+    }
+
+    /**
+     * Nested scope validation configuration properties.
+     *
+     * <p>{@code prefixes} — set of scope prefixes to filter by; only token scopes whose
+     * name begins with one of these prefixes are considered, and the prefix is stripped
+     * before matching. Pass an empty set (default) to accept all scopes without filtering.
+     *
+     * <p>{@code matchMode} — {@link ScopeMatchMode#ALL} (default) requires every required
+     * scope to be present; {@link ScopeMatchMode#ANY} requires at least one match.
+     */
+    public static class ScopeProperties {
+
+        private Set<String> prefixes = new HashSet<>();
+        private ScopeMatchMode matchMode = ScopeMatchMode.ALL;
+
+        /**
+         * Returns the set of scope prefixes used to filter token scopes.
+         *
+         * @return the scope prefixes
+         */
+        public Set<String> getPrefixes() {
+            return prefixes;
+        }
+
+        /**
+         * Sets the set of scope prefixes used to filter token scopes.
+         *
+         * @param prefixes the scope prefixes
+         */
+        public void setPrefixes(Set<String> prefixes) {
+            this.prefixes = prefixes;
+        }
+
+        /**
+         * Returns the scope match mode.
+         *
+         * @return {@link ScopeMatchMode#ALL} or {@link ScopeMatchMode#ANY}
+         */
+        public ScopeMatchMode getMatchMode() {
+            return matchMode;
+        }
+
+        /**
+         * Sets the scope match mode.
+         *
+         * @param matchMode {@link ScopeMatchMode#ALL} or {@link ScopeMatchMode#ANY}
+         */
+        public void setMatchMode(ScopeMatchMode matchMode) {
+            this.matchMode = matchMode;
+        }
     }
 
     /**
