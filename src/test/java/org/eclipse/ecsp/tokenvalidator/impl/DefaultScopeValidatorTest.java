@@ -50,11 +50,12 @@ class DefaultScopeValidatorTest {
     }
 
     @Test
-    void prefixFilterRemovesNonMatchingScopes() {
+    void prefixFilterKeepsNonMatchingScopesAsIs() {
         DefaultScopeValidator validator = new DefaultScopeValidator(Set.of("api:"));
+        // scopes without a matching prefix are kept as-is, so "read" is still present
         List<String> nonMatchingScopes = List.of("read", "write");
         List<String> requiredFiltered = List.of("read");
-        assertThrows(InvalidClaimException.class, () -> validator.validate(nonMatchingScopes, requiredFiltered));
+        assertDoesNotThrow(() -> validator.validate(nonMatchingScopes, requiredFiltered));
     }
 
     @Test
@@ -154,9 +155,10 @@ class DefaultScopeValidatorTest {
     }
 
     @Test
-    void anyModeNonPrefixScopesFilteredOutAndNoneMatchThrows() {
+    void anyModeNonPrefixScopesKeptAsIsAndNoneMatchThrows() {
         DefaultScopeValidator validator = new DefaultScopeValidator(Set.of("api:"), ScopeMatchMode.ANY);
-        // "read" has no prefix match → excluded; "api:write" → stripped to "write"
+        // "read" has no prefix match → kept as-is; "api:write" → stripped to "write"
+        // filtered = {"read", "write"}; "admin" is not present so validation still fails
         List<String> required = List.of("admin");
         List<String> tokenScopes = List.of("read", "api:write");
         try {
@@ -242,5 +244,14 @@ class DefaultScopeValidatorTest {
             Assertions.assertTrue(e.getMessage()
                 .contains("Token does not contain any of the required scopes: [admin]"));
         }
+    }
+
+    @Test
+    void anyModeUnprefixedScopeMatchesRequiredWhenPrefixConfigured() {
+        // Token has "SelfManage" (no prefix); required is also "SelfManage".
+        // With a prefix configured, the scope has no matching prefix and is kept as-is,
+        // so it must still satisfy the ANY-mode required scope check.
+        DefaultScopeValidator validator = new DefaultScopeValidator(Set.of("vehicle:"), ScopeMatchMode.ANY);
+        assertDoesNotThrow(() -> validator.validate(List.of("SelfManage"), List.of("SelfManage")));
     }
 }

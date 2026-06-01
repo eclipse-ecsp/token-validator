@@ -126,10 +126,11 @@ public class DefaultScopeValidator implements ScopeValidator {
             return Set.copyOf(tokenScopes);
         }
         return tokenScopes.stream()
-            .flatMap(scope -> scopePrefixes.stream()
+            .map(scope -> scopePrefixes.stream()
                 .filter(scope::startsWith)
                 .map(prefix -> scope.substring(prefix.length()))
-                .limit(1))
+                .findFirst()
+                .orElse(scope))
             .collect(Collectors.toUnmodifiableSet());
     }
 }
