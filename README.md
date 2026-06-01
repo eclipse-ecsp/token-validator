@@ -7,7 +7,7 @@
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=eclipse-ecsp_token-validator&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=eclipse-ecsp_token-validator)
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=eclipse-ecsp_token-validator&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=eclipse-ecsp_token-validator)
 [![License Compliance](https://github.com/eclipse-ecsp/token-validator/actions/workflows/licence-compliance.yaml/badge.svg)](https://github.com/eclipse-ecsp/token-validator/actions/workflows/licence-compliance.yaml)
-[![Latest Release](https://img.shields.io/github/v/release/eclipse-ecsp/token-validator?sort=semver)](https://github.com/eclipse-ecsp/token-validator/releases)
+[![Latest Release](https://img.shields.io/github/v/release/eclipse-ecsp/token-validator)](https://github.com/eclipse-ecsp/token-validator/releases)
 
 
 A reusable Java library for validating JWT tokens, managing public keys, and handling validation scenarios in microservices architectures.
