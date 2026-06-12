@@ -71,6 +71,7 @@ public class TokenValidatorAutoConfiguration {
 
     /** Creates a new {@code TokenValidatorAutoConfiguration} instance. */
     public TokenValidatorAutoConfiguration() {
+        // No initialization logic needed; constructor is required to create the configuration instance.
     }
 
     /**

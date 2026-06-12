@@ -19,6 +19,10 @@
 package org.eclipse.ecsp.tokenvalidator.config;
 
 import org.eclipse.ecsp.tokenvalidator.ScopeMatchMode;
+import org.eclipse.ecsp.tokenvalidator.config.TokenValidatorProperties.CacheProperties;
+import org.eclipse.ecsp.tokenvalidator.config.TokenValidatorProperties.MetricsProperties;
+import org.eclipse.ecsp.tokenvalidator.config.TokenValidatorProperties.RetryProperties;
+import org.eclipse.ecsp.tokenvalidator.config.TokenValidatorProperties.ScopeProperties;
 import org.eclipse.ecsp.tokenvalidator.model.PublicKeySource;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import java.time.Duration;
@@ -44,6 +48,7 @@ public class TokenValidatorProperties {
 
     /** Creates a new {@code TokenValidatorProperties} instance with default values. */
     public TokenValidatorProperties() {
+        // No initialization logic needed; constructor is required to create the configuration instance.
     }
 
     private List<PublicKeySource> keySources = new ArrayList<>();
@@ -232,6 +237,7 @@ public class TokenValidatorProperties {
 
         /** Creates a new {@code ScopeProperties} instance with default values. */
         public ScopeProperties() {
+            // No initialization logic needed; constructor is required to create the configuration instance.
         }
 
         private Set<String> prefixes = new HashSet<>();
@@ -281,6 +287,7 @@ public class TokenValidatorProperties {
 
         /** Creates a new {@code CacheProperties} instance with default values. */
         public CacheProperties() {
+            // No initialization logic needed; constructor is required to create the configuration instance.
         }
 
         private int maxSize = 1000;
@@ -311,6 +318,7 @@ public class TokenValidatorProperties {
 
         /** Creates a new {@code MetricsProperties} instance with default values. */
         public MetricsProperties() {
+            // No initialization logic needed; constructor is required to create the configuration instance.
         }
 
         private boolean enabled = true;
@@ -398,6 +406,7 @@ public class TokenValidatorProperties {
 
         /** Creates a new {@code RetryProperties} instance with default values. */
         public RetryProperties() {
+            // No initialization logic needed; constructor is required to create the configuration instance.
         }
 
         private Duration initialDelay = Duration.ofSeconds(1);

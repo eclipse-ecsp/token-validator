@@ -59,14 +59,16 @@ class TokenValidatorPropertiesClockSkewTest {
     @Test
     void setClockSkewAboveMaxThrowsIllegalArgumentException() {
         TokenValidatorProperties props = new TokenValidatorProperties();
+        Duration aboveMaxSkew = Duration.ofMinutes(FIVE_MINUTES);
         assertThrows(IllegalArgumentException.class,
-            () -> props.setClockSkew(Duration.ofMinutes(FIVE_MINUTES)));
+            () -> props.setClockSkew(aboveMaxSkew));
     }
 
     @Test
     void setClockSkewNegativeThrowsIllegalArgumentException() {
         TokenValidatorProperties props = new TokenValidatorProperties();
+        Duration negativeSkew = Duration.ofSeconds(NEGATIVE_ONE_SECOND);
         assertThrows(IllegalArgumentException.class,
-            () -> props.setClockSkew(Duration.ofSeconds(NEGATIVE_ONE_SECOND)));
+            () -> props.setClockSkew(negativeSkew));
     }
 }

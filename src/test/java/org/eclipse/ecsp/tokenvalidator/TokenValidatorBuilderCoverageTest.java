@@ -212,14 +212,19 @@ class TokenValidatorBuilderCoverageTest {
     @Test
     void clockSkewAboveMaxThrowsIllegalArgumentException() {
         final int fiveMinutes = 5;
+        Duration aboveMaxSkew = Duration.ofMinutes(fiveMinutes);
+        TokenValidatorBuilder builder = TokenValidatorBuilder.builder();
         assertThrows(IllegalArgumentException.class,
-            () -> TokenValidatorBuilder.builder().clockSkew(Duration.ofMinutes(fiveMinutes)));
+            () -> builder.clockSkew(aboveMaxSkew));
     }
 
     @Test
     void clockSkewNegativeThrowsIllegalArgumentException() {
+        TokenValidatorBuilder builder = TokenValidatorBuilder.builder();
+        Duration negativeSkew = Duration.ofSeconds(NEGATIVE_ONE_SECOND);
         assertThrows(IllegalArgumentException.class,
-            () -> TokenValidatorBuilder.builder().clockSkew(Duration.ofSeconds(NEGATIVE_ONE_SECOND)));
+            () -> builder.clockSkew(negativeSkew));
+
     }
 
     @Test
