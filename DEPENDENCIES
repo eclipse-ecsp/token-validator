@@ -1,11 +1,11 @@
-maven/mavencentral/ch.qos.logback/logback-classic/1.5.32, EPL-1.0 AND LGPL-2.1-only, approved, #18704
-maven/mavencentral/ch.qos.logback/logback-core/1.5.32, EPL-1.0 AND LGPL-2.1-only, approved, #15210
+maven/mavencentral/ch.qos.logback/logback-classic/1.5.34, EPL-1.0 AND LGPL-2.1-only, approved, #18704
+maven/mavencentral/ch.qos.logback/logback-core/1.5.34, EPL-1.0 AND LGPL-2.1-only, approved, #15210
 maven/mavencentral/com.ethlo.time/itu/1.14.0, Apache-2.0, approved, #19505
 maven/mavencentral/com.fasterxml.jackson.core/jackson-annotations/2.21, Apache-2.0, approved, #25587
-maven/mavencentral/com.fasterxml.jackson.core/jackson-core/2.21.2, Apache-2.0 AND MIT, approved, #25590
-maven/mavencentral/com.fasterxml.jackson.core/jackson-databind/2.21.2, Apache-2.0, approved, #25591
-maven/mavencentral/com.fasterxml.jackson.dataformat/jackson-dataformat-yaml/2.21.2, Apache-2.0, approved, #25589
-maven/mavencentral/com.fasterxml.jackson.datatype/jackson-datatype-jsr310/2.21.2, Apache-2.0, approved, #26441
+maven/mavencentral/com.fasterxml.jackson.core/jackson-core/2.21.4, Apache-2.0 AND MIT, approved, #25590
+maven/mavencentral/com.fasterxml.jackson.core/jackson-databind/2.21.4, Apache-2.0, approved, #25591
+maven/mavencentral/com.fasterxml.jackson.dataformat/jackson-dataformat-yaml/2.21.4, Apache-2.0, approved, #25589
+maven/mavencentral/com.fasterxml.jackson.datatype/jackson-datatype-jsr310/2.21.4, Apache-2.0, approved, #26441
 maven/mavencentral/com.fasterxml/classmate/1.7.3, Apache-2.0, approved, #24482
 maven/mavencentral/com.github.jknack/handlebars-helpers/4.3.1, Apache-2.0, approved, clearlydefined
 maven/mavencentral/com.github.jknack/handlebars/4.3.1, MIT AND Apache-2.0, approved, #3064
@@ -22,20 +22,28 @@ maven/mavencentral/com.vaadin.external.google/android-json/0.0.20131108.vaadin1,
 maven/mavencentral/commons-fileupload/commons-fileupload/1.6.0, Apache-2.0, approved, #21847
 maven/mavencentral/commons-io/commons-io/2.19.0, Apache-2.0, approved, #20657
 maven/mavencentral/commons-logging/commons-logging/1.3.6, Apache-2.0, approved, #11783
-maven/mavencentral/dev.morphia.morphia/morphia-core/2.2.3, Apache-2.0, approved, clearlydefined
+maven/mavencentral/dev.morphia.morphia/morphia-core/2.5.2, Apache-2.0, approved, #28039
 maven/mavencentral/io.github.classgraph/classgraph/4.8.184, MIT, approved, CQ22530
-maven/mavencentral/io.micrometer/micrometer-commons/1.16.5, Apache-2.0 AND (Apache-2.0 AND MIT), approved, #24726
+maven/mavencentral/io.micrometer/micrometer-commons/1.16.6, Apache-2.0 AND (Apache-2.0 AND MIT), approved, #24726
 maven/mavencentral/io.micrometer/micrometer-core/1.16.5, Apache-2.0 AND (Apache-2.0 AND MIT), approved, #24722
-maven/mavencentral/io.micrometer/micrometer-observation/1.16.5, Apache-2.0, approved, #24713
+maven/mavencentral/io.micrometer/micrometer-observation/1.16.6, Apache-2.0, approved, #24713
 maven/mavencentral/io.prometheus/simpleclient/0.16.0, Apache-2.0 AND CC0-1.0, approved, #19721
 maven/mavencentral/io.prometheus/simpleclient_tracer_common/0.16.0, Apache-2.0, approved, #19716
 maven/mavencentral/io.prometheus/simpleclient_tracer_otel/0.16.0, Apache-2.0, approved, #20002
 maven/mavencentral/io.prometheus/simpleclient_tracer_otel_agent/0.16.0, Apache-2.0, approved, #19706
+maven/mavencentral/io.smallrye.common/smallrye-common-annotation/2.8.0, Apache-2.0, approved, clearlydefined
+maven/mavencentral/io.smallrye.common/smallrye-common-classloader/2.8.0, Apache-2.0, approved, clearlydefined
+maven/mavencentral/io.smallrye.common/smallrye-common-constraint/2.8.0, Apache-2.0, approved, clearlydefined
+maven/mavencentral/io.smallrye.common/smallrye-common-expression/2.8.0, Apache-2.0, approved, clearlydefined
+maven/mavencentral/io.smallrye.common/smallrye-common-function/2.8.0, Apache-2.0, approved, clearlydefined
+maven/mavencentral/io.smallrye.config/smallrye-config-common/3.10.1, Apache-2.0, approved, #17861
+maven/mavencentral/io.smallrye.config/smallrye-config-core/3.10.1, Apache-2.0, approved, #18542
+maven/mavencentral/io.smallrye.config/smallrye-config/3.10.1, Apache-2.0, approved, #17902
 maven/mavencentral/jakarta.activation/jakarta.activation-api/2.1.4, EPL-2.0 OR BSD-3-Clause OR GPL-2.0-only with Classpath-exception-2.0, approved, ee4j.jaf
 maven/mavencentral/jakarta.annotation/jakarta.annotation-api/3.0.0, EPL-2.0 OR GPL-2.0-only with Classpath-exception-2.0, approved, ee4j.ca
 maven/mavencentral/jakarta.servlet/jakarta.servlet-api/6.1.0, EPL-2.0 OR GPL-2.0-only with Classpath-exception-2.0, approved, ee4j.servlet
 maven/mavencentral/jakarta.validation/jakarta.validation-api/3.1.1, Apache-2.0, approved, ee4j.validation
-maven/mavencentral/jakarta.xml.bind/jakarta.xml.bind-api/4.0.4, BSD-3-Clause, approved, ee4j.jaxb
+maven/mavencentral/jakarta.xml.bind/jakarta.xml.bind-api/4.0.5, BSD-3-Clause, approved, ee4j.jaxb
 maven/mavencentral/javax.el/javax.el-api/3.0.0, CDDL-1.0 or Apache-2.0, approved, CQ7249
 maven/mavencentral/net.bytebuddy/byte-buddy-agent/1.17.8, Apache-2.0, approved, #19238
 maven/mavencentral/net.bytebuddy/byte-buddy/1.17.8, Apache-2.0 AND BSD-3-Clause, approved, #19239
@@ -55,30 +63,31 @@ maven/mavencentral/org.aspectj/aspectjweaver/1.9.25.1, EPL-1.0, approved, tools.
 maven/mavencentral/org.assertj/assertj-core/3.27.7, Apache-2.0, approved, #17980
 maven/mavencentral/org.awaitility/awaitility/4.3.0, Apache-2.0, approved, clearlydefined
 maven/mavencentral/org.checkerframework/checker-qual/3.42.0, MIT, approved, #20003
-maven/mavencentral/org.eclipse.ecsp/entities/1.2.0, Apache-2.0, approved, automotive.ecsp
-maven/mavencentral/org.eclipse.ecsp/utils/1.2.0, Apache-2.0, approved, automotive.ecsp
-maven/mavencentral/org.eclipse.jetty.compression/jetty-compression-common/12.1.8, EPL-2.0 OR Apache-2.0, approved, rt.jetty
-maven/mavencentral/org.eclipse.jetty.compression/jetty-compression-gzip/12.1.8, EPL-2.0 OR Apache-2.0, approved, rt.jetty
-maven/mavencentral/org.eclipse.jetty.ee/jetty-ee-webapp/12.1.8, EPL-2.0 OR Apache-2.0, approved, rt.jetty
+maven/mavencentral/org.eclipse.ecsp/entities/1.2.1, Apache-2.0, approved, automotive.ecsp
+maven/mavencentral/org.eclipse.ecsp/utils/1.2.3, Apache-2.0, approved, automotive.ecsp
+maven/mavencentral/org.eclipse.jetty.compression/jetty-compression-common/12.1.10, EPL-2.0 OR Apache-2.0, approved, rt.jetty
+maven/mavencentral/org.eclipse.jetty.compression/jetty-compression-gzip/12.1.10, EPL-2.0 OR Apache-2.0, approved, rt.jetty
+maven/mavencentral/org.eclipse.jetty.ee/jetty-ee-webapp/12.1.10, EPL-2.0 OR Apache-2.0, approved, rt.jetty
 maven/mavencentral/org.eclipse.jetty.ee10/jetty-ee10-servlet/12.1.9, EPL-2.0 OR Apache-2.0, approved, rt.jetty
 maven/mavencentral/org.eclipse.jetty.ee10/jetty-ee10-servlets/12.1.9, EPL-2.0 OR Apache-2.0, approved, rt.jetty
 maven/mavencentral/org.eclipse.jetty.ee10/jetty-ee10-webapp/12.1.9, EPL-2.0 OR Apache-2.0, approved, rt.jetty
-maven/mavencentral/org.eclipse.jetty.http2/jetty-http2-common/12.1.8, EPL-2.0 OR Apache-2.0, approved, rt.jetty
-maven/mavencentral/org.eclipse.jetty.http2/jetty-http2-hpack/12.1.8, EPL-2.0 OR Apache-2.0, approved, rt.jetty
-maven/mavencentral/org.eclipse.jetty.http2/jetty-http2-server/12.1.8, EPL-2.0 OR Apache-2.0, approved, rt.jetty
-maven/mavencentral/org.eclipse.jetty/jetty-alpn-client/12.1.8, EPL-2.0 OR Apache-2.0, approved, rt.jetty
-maven/mavencentral/org.eclipse.jetty/jetty-alpn-java-client/12.1.8, EPL-2.0 OR Apache-2.0, approved, rt.jetty
-maven/mavencentral/org.eclipse.jetty/jetty-alpn-java-server/12.1.8, EPL-2.0 OR Apache-2.0, approved, rt.jetty
-maven/mavencentral/org.eclipse.jetty/jetty-alpn-server/12.1.8, EPL-2.0 OR Apache-2.0, approved, rt.jetty
-maven/mavencentral/org.eclipse.jetty/jetty-client/12.1.8, EPL-2.0 OR Apache-2.0, approved, rt.jetty
-maven/mavencentral/org.eclipse.jetty/jetty-http/12.1.8, EPL-2.0 OR Apache-2.0, approved, rt.jetty
-maven/mavencentral/org.eclipse.jetty/jetty-io/12.1.8, EPL-2.0 OR Apache-2.0, approved, rt.jetty
-maven/mavencentral/org.eclipse.jetty/jetty-proxy/12.1.8, EPL-2.0 OR Apache-2.0, approved, rt.jetty
-maven/mavencentral/org.eclipse.jetty/jetty-security/12.1.8, EPL-2.0 OR Apache-2.0, approved, rt.jetty
-maven/mavencentral/org.eclipse.jetty/jetty-server/12.1.8, EPL-2.0 OR Apache-2.0, approved, rt.jetty
-maven/mavencentral/org.eclipse.jetty/jetty-session/12.1.8, EPL-2.0 OR Apache-2.0, approved, rt.jetty
-maven/mavencentral/org.eclipse.jetty/jetty-util/12.1.8, EPL-2.0 OR Apache-2.0, approved, rt.jetty
-maven/mavencentral/org.eclipse.jetty/jetty-xml/12.1.8, EPL-2.0 OR Apache-2.0, approved, rt.jetty
+maven/mavencentral/org.eclipse.jetty.http2/jetty-http2-common/12.1.10, EPL-2.0 OR Apache-2.0, approved, rt.jetty
+maven/mavencentral/org.eclipse.jetty.http2/jetty-http2-hpack/12.1.10, EPL-2.0 OR Apache-2.0, approved, rt.jetty
+maven/mavencentral/org.eclipse.jetty.http2/jetty-http2-server/12.1.10, EPL-2.0 OR Apache-2.0, approved, rt.jetty
+maven/mavencentral/org.eclipse.jetty/jetty-alpn-client/12.1.10, EPL-2.0 OR Apache-2.0, approved, rt.jetty
+maven/mavencentral/org.eclipse.jetty/jetty-alpn-java-client/12.1.10, EPL-2.0 OR Apache-2.0, approved, rt.jetty
+maven/mavencentral/org.eclipse.jetty/jetty-alpn-java-server/12.1.10, EPL-2.0 OR Apache-2.0, approved, rt.jetty
+maven/mavencentral/org.eclipse.jetty/jetty-alpn-server/12.1.10, EPL-2.0 OR Apache-2.0, approved, rt.jetty
+maven/mavencentral/org.eclipse.jetty/jetty-client/12.1.10, EPL-2.0 OR Apache-2.0, approved, rt.jetty
+maven/mavencentral/org.eclipse.jetty/jetty-http/12.1.10, EPL-2.0 OR Apache-2.0, approved, rt.jetty
+maven/mavencentral/org.eclipse.jetty/jetty-io/12.1.10, EPL-2.0 OR Apache-2.0, approved, rt.jetty
+maven/mavencentral/org.eclipse.jetty/jetty-proxy/12.1.10, EPL-2.0 OR Apache-2.0, approved, rt.jetty
+maven/mavencentral/org.eclipse.jetty/jetty-security/12.1.10, EPL-2.0 OR Apache-2.0, approved, rt.jetty
+maven/mavencentral/org.eclipse.jetty/jetty-server/12.1.10, EPL-2.0 OR Apache-2.0, approved, rt.jetty
+maven/mavencentral/org.eclipse.jetty/jetty-session/12.1.10, EPL-2.0 OR Apache-2.0, approved, rt.jetty
+maven/mavencentral/org.eclipse.jetty/jetty-util/12.1.10, EPL-2.0 OR Apache-2.0, approved, rt.jetty
+maven/mavencentral/org.eclipse.jetty/jetty-xml/12.1.10, EPL-2.0 OR Apache-2.0, approved, rt.jetty
+maven/mavencentral/org.eclipse.microprofile.config/microprofile-config-api/3.1, Apache-2.0, approved, technology.microprofile
 maven/mavencentral/org.glassfish.web/javax.el/2.2.6, CDDL-1.0 OR GPL-2.0-only WITH Classpath-exception-2.0, approved, #1654
 maven/mavencentral/org.hamcrest/hamcrest-core/3.0, BSD-3-Clause, approved, clearlydefined
 maven/mavencentral/org.hamcrest/hamcrest/3.0, BSD-3-Clause, approved, #17661
@@ -86,7 +95,7 @@ maven/mavencentral/org.hdrhistogram/HdrHistogram/2.2.2, BSD-2-Clause AND CC0-1.0
 maven/mavencentral/org.hibernate.validator/hibernate-validator/9.0.1.Final, Apache-2.0, approved, clearlydefined
 maven/mavencentral/org.javassist/javassist/3.21.0-GA, MPL-1.1 OR LGPL-2.1-or-later OR Apache-2.0, approved, CQ14999
 maven/mavencentral/org.jboss.logging/jboss-logging/3.6.3.Final, Apache-2.0, approved, #26108
-maven/mavencentral/org.jetbrains/annotations/13.0, Apache-2.0, approved, clearlydefined
+maven/mavencentral/org.jsoup/jsoup/1.21.2, MIT AND Apache-2.0, approved, #22199
 maven/mavencentral/org.jspecify/jspecify/1.0.0, Apache-2.0, approved, #21897
 maven/mavencentral/org.junit.jupiter/junit-jupiter-api/6.0.3, EPL-2.0, approved, #22892
 maven/mavencentral/org.junit.jupiter/junit-jupiter-engine/6.0.3, EPL-2.0, approved, #23932
@@ -100,32 +109,33 @@ maven/mavencentral/org.mockito/mockito-junit-jupiter/5.20.0, MIT, approved, #233
 maven/mavencentral/org.mongodb/bson-record-codec/5.6.5, Apache-2.0, approved, #23908
 maven/mavencentral/org.mongodb/bson/5.6.5, Apache-2.0, approved, #23888
 maven/mavencentral/org.mongodb/mongodb-driver-core/5.6.5, Apache-2.0 AND CC-BY-2.5 AND (Apache-2.0 AND MIT), approved, #23900
-maven/mavencentral/org.mongodb/mongodb-driver-legacy/4.5.1, Apache-2.0, approved, clearlydefined
+maven/mavencentral/org.mongodb/mongodb-driver-legacy/5.2.1, Apache-2.0, approved, clearlydefined
 maven/mavencentral/org.mongodb/mongodb-driver-sync/5.6.5, Apache-2.0, approved, #26561
 maven/mavencentral/org.objenesis/objenesis/3.3, Apache-2.0, approved, #19727
 maven/mavencentral/org.opentest4j/opentest4j/1.3.0, Apache-2.0, approved, #9713
 maven/mavencentral/org.ow2.asm/asm/9.7.1, BSD-3-Clause, approved, #16464
 maven/mavencentral/org.reflections/reflections/0.9.11, MIT, approved, CQ16665
+maven/mavencentral/org.semver4j/semver4j/5.8.0, MIT, approved, clearlydefined
 maven/mavencentral/org.skyscreamer/jsonassert/1.5.3, Apache-2.0, approved, clearlydefined
-maven/mavencentral/org.slf4j/jul-to-slf4j/2.0.17, MIT, approved, #7698
-maven/mavencentral/org.slf4j/slf4j-api/2.0.17, MIT, approved, #5915
-maven/mavencentral/org.springframework.boot/spring-boot-autoconfigure/4.0.6, Apache-2.0, approved, #24987
-maven/mavencentral/org.springframework.boot/spring-boot-configuration-processor/4.0.6, Apache-2.0, approved, #26123
-maven/mavencentral/org.springframework.boot/spring-boot-starter-aspectj/4.0.6, Apache-2.0, approved, #26060
-maven/mavencentral/org.springframework.boot/spring-boot-starter-logging/4.0.6, Apache-2.0, approved, #25602
-maven/mavencentral/org.springframework.boot/spring-boot-starter-test/4.0.6, Apache-2.0, approved, #25598
-maven/mavencentral/org.springframework.boot/spring-boot-starter-validation/4.0.6, Apache-2.0, approved, #25629
-maven/mavencentral/org.springframework.boot/spring-boot-starter/4.0.6, Apache-2.0, approved, #25636
-maven/mavencentral/org.springframework.boot/spring-boot-test-autoconfigure/4.0.6, Apache-2.0, approved, #24996
-maven/mavencentral/org.springframework.boot/spring-boot-test/4.0.6, Apache-2.0, approved, #24997
-maven/mavencentral/org.springframework.boot/spring-boot-validation/4.0.6, Apache-2.0, approved, #26084
-maven/mavencentral/org.springframework.boot/spring-boot/4.0.6, Apache-2.0, approved, #24993
-maven/mavencentral/org.springframework/spring-aop/7.0.7, Apache-2.0, approved, #24985
-maven/mavencentral/org.springframework/spring-beans/7.0.7, Apache-2.0, approved, #24991
-maven/mavencentral/org.springframework/spring-context/7.0.7, Apache-2.0, approved, #24986
-maven/mavencentral/org.springframework/spring-core/7.0.7, Apache-2.0 AND BSD-3-Clause, approved, #24992
-maven/mavencentral/org.springframework/spring-expression/7.0.7, Apache-2.0, approved, #24988
-maven/mavencentral/org.springframework/spring-test/7.0.7, Apache-2.0, approved, #24998
+maven/mavencentral/org.slf4j/jul-to-slf4j/2.0.18, MIT, approved, #7698
+maven/mavencentral/org.slf4j/slf4j-api/2.0.18, MIT, approved, #5915
+maven/mavencentral/org.springframework.boot/spring-boot-autoconfigure/4.0.7, Apache-2.0, approved, #24987
+maven/mavencentral/org.springframework.boot/spring-boot-configuration-processor/4.0.7, Apache-2.0, approved, #26123
+maven/mavencentral/org.springframework.boot/spring-boot-starter-aspectj/4.0.7, Apache-2.0, approved, #26060
+maven/mavencentral/org.springframework.boot/spring-boot-starter-logging/4.0.7, Apache-2.0, approved, #25602
+maven/mavencentral/org.springframework.boot/spring-boot-starter-test/4.0.7, Apache-2.0, approved, #25598
+maven/mavencentral/org.springframework.boot/spring-boot-starter-validation/4.0.7, Apache-2.0, approved, #25629
+maven/mavencentral/org.springframework.boot/spring-boot-starter/4.0.7, Apache-2.0, approved, #25636
+maven/mavencentral/org.springframework.boot/spring-boot-test-autoconfigure/4.0.7, Apache-2.0, approved, #24996
+maven/mavencentral/org.springframework.boot/spring-boot-test/4.0.7, Apache-2.0, approved, #24997
+maven/mavencentral/org.springframework.boot/spring-boot-validation/4.0.7, Apache-2.0, approved, #26084
+maven/mavencentral/org.springframework.boot/spring-boot/4.0.7, Apache-2.0, approved, #24993
+maven/mavencentral/org.springframework/spring-aop/7.0.8, Apache-2.0, approved, #24985
+maven/mavencentral/org.springframework/spring-beans/7.0.8, Apache-2.0, approved, #24991
+maven/mavencentral/org.springframework/spring-context/7.0.8, Apache-2.0, approved, #24986
+maven/mavencentral/org.springframework/spring-core/7.0.8, Apache-2.0 AND BSD-3-Clause, approved, #24992
+maven/mavencentral/org.springframework/spring-expression/7.0.8, Apache-2.0, approved, #24988
+maven/mavencentral/org.springframework/spring-test/7.0.8, Apache-2.0, approved, #24998
 maven/mavencentral/org.wiremock/wiremock-jetty12/3.13.2, Apache-2.0, approved, #21027
 maven/mavencentral/org.wiremock/wiremock/3.13.2, MIT AND Apache-2.0, approved, #21025
 maven/mavencentral/org.xmlunit/xmlunit-core/2.10.4, Apache-2.0, approved, #14590
