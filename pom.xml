@@ -7,7 +7,7 @@
 
     <groupId>org.eclipse.ecsp</groupId>
     <artifactId>token-validator</artifactId>
-    <version>0.0.2-SNAPSHOT</version>
+    <version>0.0.3-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>Token Validator</name>
@@ -74,11 +74,11 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!-- Dependency versions -->
-        <spring.boot.version>4.0.6</spring.boot.version>
+        <spring.boot.version>4.0.7</spring.boot.version>
         <nimbus.jose.jwt.version>10.9</nimbus.jose.jwt.version>
         <httpclient5.version>5.6.1</httpclient5.version>
         <micrometer.version>1.16.5</micrometer.version>
-        <ecsp.utils.version>1.2.0</ecsp.utils.version>
+        <ecsp.utils.version>1.2.3</ecsp.utils.version>
         <tomcat.version>11.0.22</tomcat.version>
         <classgraph.version>4.8.184</classgraph.version>
 

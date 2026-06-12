@@ -42,6 +42,10 @@ import static org.eclipse.ecsp.tokenvalidator.config.TokenValidatorPropertyNames
 @ConfigurationProperties(prefix = PROPERTY_PREFIX)
 public class TokenValidatorProperties {
 
+    /** Creates a new {@code TokenValidatorProperties} instance with default values. */
+    public TokenValidatorProperties() {
+    }
+
     private List<PublicKeySource> keySources = new ArrayList<>();
     private List<String> whitelistedAlgorithms = List.of("RS256", "ES256");
     private Duration clockSkew = Duration.ZERO;
@@ -97,12 +101,30 @@ public class TokenValidatorProperties {
         return clockSkew;
     }
 
+    /** Maximum permitted clock-skew tolerance (60 seconds). */
+    public static final Duration MAX_CLOCK_SKEW = Duration.ofSeconds(60);
+
     /**
      * Sets the clock skew tolerance for exp/nbf validation.
      *
+     * <p>The maximum allowed value is 60 seconds. Providing a larger value is rejected with an
+     * {@link IllegalArgumentException}. {@code null} is treated as {@link Duration#ZERO}.
+     *
      * @param clockSkew the clock skew duration
+     * @throws IllegalArgumentException if the duration is negative or exceeds 60 seconds
      */
     public void setClockSkew(Duration clockSkew) {
+        if (clockSkew == null) {
+            this.clockSkew = Duration.ZERO;
+            return;
+        }
+        if (clockSkew.isNegative()) {
+            throw new IllegalArgumentException("clockSkew must not be negative");
+        }
+        if (clockSkew.compareTo(MAX_CLOCK_SKEW) > 0) {
+            throw new IllegalArgumentException(
+                "clockSkew exceeds the maximum allowed value of 60 seconds");
+        }
         this.clockSkew = clockSkew;
     }
 
@@ -208,6 +230,10 @@ public class TokenValidatorProperties {
      */
     public static class ScopeProperties {
 
+        /** Creates a new {@code ScopeProperties} instance with default values. */
+        public ScopeProperties() {
+        }
+
         private Set<String> prefixes = new HashSet<>();
         private ScopeMatchMode matchMode = ScopeMatchMode.ALL;
 
@@ -253,6 +279,10 @@ public class TokenValidatorProperties {
      */
     public static class CacheProperties {
 
+        /** Creates a new {@code CacheProperties} instance with default values. */
+        public CacheProperties() {
+        }
+
         private int maxSize = 1000;
 
         /**
@@ -278,6 +308,10 @@ public class TokenValidatorProperties {
      * Nested metrics configuration properties.
      */
     public static class MetricsProperties {
+
+        /** Creates a new {@code MetricsProperties} instance with default values. */
+        public MetricsProperties() {
+        }
 
         private boolean enabled = true;
         private String prefix = PROPERTY_PREFIX;
@@ -361,6 +395,10 @@ public class TokenValidatorProperties {
      * Nested JWKS retry strategy configuration properties.
      */
     public static class RetryProperties {
+
+        /** Creates a new {@code RetryProperties} instance with default values. */
+        public RetryProperties() {
+        }
 
         private Duration initialDelay = Duration.ofSeconds(1);
         private int maxAttempts = 3;

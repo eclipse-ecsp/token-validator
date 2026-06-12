@@ -162,14 +162,32 @@ public final class TokenValidatorBuilder {
         return this;
     }
 
+    /** Maximum permitted clock-skew tolerance (60 seconds). */
+    static final Duration MAX_CLOCK_SKEW = Duration.ofSeconds(60);
+
     /**
      * Optional. Symmetric clock-skew tolerance for exp/nbf validation. Default: {@link Duration#ZERO}.
      *
-     * @param skew the clock skew duration
+     * <p>The maximum allowed value is 60 seconds. Providing a larger value is rejected with an
+     * {@link IllegalArgumentException}.
+     *
+     * @param skew the clock skew duration; {@code null} is treated as {@link Duration#ZERO}
      * @return this builder
+     * @throws IllegalArgumentException if the duration is negative or exceeds 60 seconds
      */
     public TokenValidatorBuilder clockSkew(Duration skew) {
-        this.clockSkew = skew != null ? skew : Duration.ZERO;
+        if (skew == null) {
+            this.clockSkew = Duration.ZERO;
+            return this;
+        }
+        if (skew.isNegative()) {
+            throw new IllegalArgumentException("clockSkew must not be negative");
+        }
+        if (skew.compareTo(MAX_CLOCK_SKEW) > 0) {
+            throw new IllegalArgumentException(
+                "clockSkew exceeds the maximum allowed value of 60 seconds");
+        }
+        this.clockSkew = skew;
         return this;
     }
 
