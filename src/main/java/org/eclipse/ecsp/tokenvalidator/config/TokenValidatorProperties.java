@@ -19,10 +19,6 @@
 package org.eclipse.ecsp.tokenvalidator.config;
 
 import org.eclipse.ecsp.tokenvalidator.ScopeMatchMode;
-import org.eclipse.ecsp.tokenvalidator.config.TokenValidatorProperties.CacheProperties;
-import org.eclipse.ecsp.tokenvalidator.config.TokenValidatorProperties.MetricsProperties;
-import org.eclipse.ecsp.tokenvalidator.config.TokenValidatorProperties.RetryProperties;
-import org.eclipse.ecsp.tokenvalidator.config.TokenValidatorProperties.ScopeProperties;
 import org.eclipse.ecsp.tokenvalidator.model.PublicKeySource;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import java.time.Duration;
