@@ -69,6 +69,11 @@ import java.util.stream.Collectors;
 @EnableConfigurationProperties(TokenValidatorProperties.class)
 public class TokenValidatorAutoConfiguration {
 
+    /** Creates a new {@code TokenValidatorAutoConfiguration} instance. */
+    public TokenValidatorAutoConfiguration() {
+        // No initialization logic needed; constructor is required to create the configuration instance.
+    }
+
     /**
      * Provides the default {@link ScopeValidator} bean backed by the configured scope prefixes
      * and match mode. Consumers can override by registering their own {@link ScopeValidator} bean.

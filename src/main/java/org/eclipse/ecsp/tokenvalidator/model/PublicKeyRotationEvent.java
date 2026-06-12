@@ -39,6 +39,7 @@ public class PublicKeyRotationEvent extends ApplicationEvent {
 
     private static final long serialVersionUID = 1L;
 
+    /** The issuer identifier whose public keys have been rotated. */
     private final String issuer;
 
     /**
