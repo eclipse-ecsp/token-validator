@@ -30,6 +30,7 @@ import org.eclipse.ecsp.tokenvalidator.model.PublicKeySource;
 import org.junit.jupiter.api.Test;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
+import java.time.Duration;
 import java.util.List;
 import java.util.Set;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -45,6 +46,7 @@ class TokenValidatorBuilderCoverageTest {
 
     private static final int RSA_KEY_SIZE = 2048;
     private static final int CACHE_CAPACITY = 100;
+    private static final long NEGATIVE_ONE_SECOND = -1L;
 
     private static KeyPair generateKeyPair() throws Exception {
         KeyPairGenerator gen = KeyPairGenerator.getInstance("RSA");
@@ -193,6 +195,31 @@ class TokenValidatorBuilderCoverageTest {
             .clockSkew(null)
             .build();
         assertNotNull(validator);
+    }
+
+    @Test
+    void clockSkewExactlyAtMaxIsAccepted() throws Exception {
+        KeyPair kp = generateKeyPair();
+        InMemoryPublicKeyCache cache = new InMemoryPublicKeyCache(CACHE_CAPACITY);
+        cache.put("iss:kid1", new PublicKeyInfo(kp.getPublic(), "kid1", "iss", null));
+        TokenValidator validator = TokenValidatorBuilder.builder()
+            .publicKeyManager(buildManager(cache))
+            .clockSkew(TokenValidatorBuilder.MAX_CLOCK_SKEW)
+            .build();
+        assertNotNull(validator);
+    }
+
+    @Test
+    void clockSkewAboveMaxThrowsIllegalArgumentException() {
+        final int fiveMinutes = 5;
+        assertThrows(IllegalArgumentException.class,
+            () -> TokenValidatorBuilder.builder().clockSkew(Duration.ofMinutes(fiveMinutes)));
+    }
+
+    @Test
+    void clockSkewNegativeThrowsIllegalArgumentException() {
+        assertThrows(IllegalArgumentException.class,
+            () -> TokenValidatorBuilder.builder().clockSkew(Duration.ofSeconds(NEGATIVE_ONE_SECOND)));
     }
 
     @Test
