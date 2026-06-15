@@ -6,7 +6,8 @@ on:
 
 jobs:
   sonar_analysis:
-    uses: eclipse-ecsp/.github/.github/workflows/workflow-sonar-analysis.yml@52c11f63f46f741e4f56c5dace97b44982a4372b
+    uses: eclipse-ecsp/.github/.github/workflows/workflow-sonar-analysis.yml@rw-v1
+    name: Sonar Analysis
     secrets:
       token: ${{ secrets.SONAR_TOKEN }}
     with:
@@ -14,7 +15,7 @@ jobs:
       java_distribution: 'temurin'
   licence_compliance_status:
     needs: sonar_analysis
-    uses: eclipse-ecsp/.github/.github/workflows/workflow-licences-analysis.yml@52c11f63f46f741e4f56c5dace97b44982a4372b
+    uses: eclipse-ecsp/.github/.github/workflows/workflow-licences-analysis.yml@rw-v1
     name: Check Licence Compliance Status
     with:
       java_version: '25'
@@ -26,29 +27,19 @@ jobs:
     needs: licence_compliance_status
     name: Extract release version without v prefix
     outputs:
-      release_version: ${{ steps.set_version.outputs.release_version }}
+      release_version: ${{ steps.extract.outputs.release_version }}
     steps:
-      - id: set_version
-        run: |
-          if [[ "${{ github.event_name }}" == "release" ]]; then
-              if [[ "${{ github.event.release.tag_name }}" == v* ]]; then
-                  version=${{ github.event.release.tag_name }}
-                  echo "release_version=${version:1}" >> $GITHUB_ENV
-                  echo "::set-output name=release_version::${version:1}"
-              else
-                  echo "release_version=${{ github.event.release.tag_name }}" >> $GITHUB_ENV
-                  echo "::set-output name=release_version::${{ github.event.release.tag_name }}"
-              fi
-          else
-            version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout | sed 's/-SNAPSHOT//')
-            echo "release_version=$version" >> $GITHUB_ENV
-            echo "::set-output name=release_version::$version"
-          fi
+    - uses: eclipse-ecsp/.github/.github/actions/extract-version@rw-v1
+      id: extract
 
   publish_artifacts:
     needs: extract_version
-    uses: eclipse-ecsp/.github/.github/workflows/workflow-publish-artifacts.yml@52c11f63f46f741e4f56c5dace97b44982a4372b
-    secrets: inherit
+    uses: eclipse-ecsp/.github/.github/workflows/workflow-publish-artifacts.yml@rw-v1
+    secrets:
+      GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+      GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+      CENTRAL_SONATYPE_TOKEN_USERNAME: ${{ secrets.CENTRAL_SONATYPE_TOKEN_USERNAME }}
+      CENTRAL_SONATYPE_TOKEN_PASSWORD: ${{ secrets.CENTRAL_SONATYPE_TOKEN_PASSWORD }}
     with:
       java_version: '25'
       java_distribution: 'temurin'
@@ -56,9 +47,13 @@ jobs:
 
   update_next_version:
     needs: extract_version
-    uses: eclipse-ecsp/.github/.github/workflows/workflow-update-next-version.yml@52c11f63f46f741e4f56c5dace97b44982a4372b
+    uses: eclipse-ecsp/.github/.github/workflows/workflow-update-next-version.yml@rw-v1
     with:
       version: ${{ needs.extract_version.outputs.release_version }}
       java_version: '25'
       java_distribution: 'temurin'
-    secrets: inherit
+    secrets:
+      ECSP_BOT_PAT: ${{ secrets.ECSP_BOT_PAT }}
+    permissions:
+      pull-requests: write
+      contents: write
