@@ -6,7 +6,7 @@ on:
 
 jobs:
   sonar_analysis:
-    uses: eclipse-ecsp/.github/.github/workflows/workflow-sonar-analysis.yml@rw-v1
+    uses: eclipse-ecsp/.github/.github/workflows/workflow-sonar-analysis.yml@cd37031cbafcac029ce6cd8b98dba5c41e9531d6
     name: Sonar Analysis
     secrets:
       token: ${{ secrets.SONAR_TOKEN }}
@@ -15,7 +15,7 @@ jobs:
       java_distribution: 'temurin'
   licence_compliance_status:
     needs: sonar_analysis
-    uses: eclipse-ecsp/.github/.github/workflows/workflow-licences-analysis.yml@rw-v1
+    uses: eclipse-ecsp/.github/.github/workflows/workflow-licences-analysis.yml@cd37031cbafcac029ce6cd8b98dba5c41e9531d6
     name: Check Licence Compliance Status
     with:
       java_version: '25'
@@ -29,12 +29,12 @@ jobs:
     outputs:
       release_version: ${{ steps.extract.outputs.release_version }}
     steps:
-    - uses: eclipse-ecsp/.github/.github/actions/extract-version@rw-v1
+    - uses: eclipse-ecsp/.github/.github/actions/extract-version@cd37031cbafcac029ce6cd8b98dba5c41e9531d6
       id: extract
 
   publish_artifacts:
     needs: extract_version
-    uses: eclipse-ecsp/.github/.github/workflows/workflow-publish-artifacts.yml@rw-v1
+    uses: eclipse-ecsp/.github/.github/workflows/workflow-publish-artifacts.yml@cd37031cbafcac029ce6cd8b98dba5c41e9531d6
     secrets:
       GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
       GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
@@ -47,7 +47,7 @@ jobs:
 
   update_next_version:
     needs: extract_version
-    uses: eclipse-ecsp/.github/.github/workflows/workflow-update-next-version.yml@rw-v1
+    uses: eclipse-ecsp/.github/.github/workflows/workflow-update-next-version.yml@cd37031cbafcac029ce6cd8b98dba5c41e9531d6
     with:
       version: ${{ needs.extract_version.outputs.release_version }}
       java_version: '25'
